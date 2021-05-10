@@ -10,7 +10,8 @@ function Home() {
             margin: 'auto',
             width: '60%',
             display: 'block',
-            backgroundColor: '#fafafa'
+            backgroundColor: '#fafafa',
+            marginTop: '15px',
         }
     }
     const history = useHistory();
@@ -18,11 +19,18 @@ function Home() {
         let path = '/';
         history.push(path);
     }
+
+    const user = JSON.parse(sessionStorage.getItem('user'));
     return <Container component="main" maxWidth="xs">
         <CssBaseline />
         <br></br>
-        <div>
+        <div style = {{'marginTop':'70px'}}>
             <h4>Bienvenidos a la mejor aplicación para controlar tu equipo</h4>
+            {user && (
+                <h3>Tu nombre es {user.firstName}</h3>
+            )
+            }
+            
         </div>
         <div style = {{'textAlign':'center', 'margin': 'auto'}}>
             <Button variant="contained"  color="primary" onClick={routeRedirect}>
