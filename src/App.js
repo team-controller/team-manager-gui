@@ -6,6 +6,7 @@ import Home from "./views/home";
 import BottomBar from './components/bottom-bar'
 import { makeStyles, createMuiTheme} from "@material-ui/core/styles";
 import Login from "./views/Login";
+import Signup from "./views/Signup/signup";
 import Header from "./components/navBar";
 
 const drawerWidth = 240
@@ -88,6 +89,7 @@ export default function App() {
           <Switch>
             <Route exact path={["/", "/"]} component={Home} />
             <Route exact path={'/login'} component={Login} />
+            <Route exact path={'/signup'} component={Signup} />
           </Switch>
         </div>
         <div className={classes.colorBar}>

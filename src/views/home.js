@@ -33,9 +33,9 @@ function Home() {
             
         </div>
         <div style = {{'textAlign':'center', 'margin': 'auto'}}>
-            <Button variant="contained"  color="primary" onClick={routeRedirect}>
-                Ir al inicio
-                </Button>
+            <Button variant="contained"  color="primary" onClick={() => history.push("/signup")}>
+                Registrate
+            </Button>
         </div>
     </Container>
 }

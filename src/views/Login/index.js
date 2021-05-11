@@ -150,7 +150,6 @@ export default function Login() {
                     </form>
                 </div>
             </Container>
-            {/* <Footer/> */}
         </div>
     )
 }
