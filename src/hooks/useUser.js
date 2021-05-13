@@ -17,6 +17,9 @@ export default function useUser() {
                 window.sessionStorage.setItem('user', JSON.stringify(user))
                 setState({ loading: false, error: false })
                 setAuth(user)
+                if(user.hasTeam === false){
+                    history.push("/createTeam")
+                }
             })
             .catch(err => {
                 window.sessionStorage.removeItem('user')
@@ -30,12 +33,12 @@ export default function useUser() {
             })
     }, [setAuth, history])
 
-    const signup = useCallback(({ username, email, roles, password, firstName, lastName, dni, phoneNumber }) => {
+    const signup = useCallback(({ username, fechaNacimiento, role, password, firstName, secondName, phoneNumber}) => {
         setState({ loading: true, error: false })
-        authService.register({ username, email, roles, password, firstName, lastName, dni, phoneNumber })
+        authService.register({ username, fechaNacimiento, role, password, firstName, secondName, phoneNumber })
             .then(() => {
                 history.push({
-                    pathname: '/login',
+                    pathname: '/createTeam',
                     search: '?registered=true'
                 })
             })

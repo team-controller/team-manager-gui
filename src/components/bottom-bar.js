@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import useUser from '../hooks/useUser';
 import Drawer from '@material-ui/core/Drawer';
 import { useHistory } from 'react-router';
+import TeamService from "../services/team.service";
 
 const useStyles = makeStyles({
   root: {
@@ -27,28 +28,22 @@ export default function SimpleBottomNavigation(props) {
   const [value, setValue] = React.useState(0);
   const history = useHistory();
   const {auth, isLogged} = useUser();
-  
-//   useEffect(() => {
-//     if (
-//       auth !== undefined &&
-//       auth !== null &&
-//       auth.roles.includes('ROLE_CLIENT')
-//     ) {
-//       MesaDataService.getBarClient(auth.username)
-//         .then((res) => {
-//           if (res.status === 200) {
-//             updateCurrentBar(res.data);
-//           } else {
-//             updateCurrentBar(undefined);
-//           }
-//         })
-//         .catch((error) => {
-//           updateCurrentBar(undefined);
-//           console.log('Error: ' + error);
-//           history.push('/pageNotFound');
-//         });
-//     }
-//   }, [auth, history, updateCurrentBar]);
+  const [team, setTeam] = useState({});
+  useEffect(() => {
+    if (
+      auth !== undefined &&
+      auth !== null &&
+      auth.role === 'ROLE_COACH'
+    ) {
+      TeamService.getTeamByCoachId(auth.username).then((teamRes) => { 
+        setTeam(teamRes);
+      })
+        .catch((error) => {
+          console.log('Error: ' + error);
+          history.push('/');
+        });
+    }
+  }, [auth, history]);
 
   return (
     <Drawer variant="persistent" anchor="bottom" open={isLogged}>

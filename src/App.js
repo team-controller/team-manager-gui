@@ -8,6 +8,8 @@ import { makeStyles, createMuiTheme} from "@material-ui/core/styles";
 import Login from "./views/Login";
 import Signup from "./views/Signup/signup";
 import Header from "./components/navBar";
+import CreateTeam from "./views/Team/createTeam";
+import Team from "./views/Team/team";
 
 const drawerWidth = 240
 
@@ -90,6 +92,9 @@ export default function App() {
             <Route exact path={["/", "/"]} component={Home} />
             <Route exact path={'/login'} component={Login} />
             <Route exact path={'/signup'} component={Signup} />
+            <Route exact path={'/createTeam/:userName'} component={CreateTeam} />
+            <Route exact path={'/team/:userName'} component={Team} />
+            
           </Switch>
         </div>
         <div className={classes.colorBar}>

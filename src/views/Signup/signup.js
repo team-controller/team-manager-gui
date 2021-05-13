@@ -54,13 +54,10 @@ export default function SignUp() {
     const [formData, setFormData] = useState({})
     const [checkData, setCheckData] = useState({})
     const [formErrors, setFormErrors] = useState({})
-    const [errorOpen, setErrorOpen] = useState('')
-    const [errors, setErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [now, setNow] = useState(new Date())
     const [dateOfBorn, setDateOfBorn] = useState(new Date(now.getTime() + 2 * 60000))
-    const roles = ['ROLE_CLIENT']
-    const emailPatt = new RegExp(/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i)
+    const role = 'ROLE_COACH'
     const phonePatt = new RegExp("^[+]*[(]?[0-9]{1,4}[)]?[-s./0-9]*$")
 
     const {isLogged, signup, error} = useUser()
@@ -94,7 +91,7 @@ export default function SignUp() {
             let firstName = formData.firstName
             let secondName = formData.secondName
             let phoneNumber = formData.phoneNumber
-            signup({username, fechaNacimiento, roles, password, firstName, secondName, phoneNumber})
+            signup({username, fechaNacimiento, role, password, firstName, secondName, phoneNumber})
         }
     }
     const selectFile = (e) => {
@@ -199,21 +196,18 @@ export default function SignUp() {
                                            onChange={(e) => handleChange(e)}
                                 />
                             </Grid>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Grid item xs={12}>
-                                    <div className='input-margin'>
-                                        <KeyboardDateTimePicker
-                                            id="fechaNacimiento"
-                                            label="Fecha de Nacimiento"
-                                            value={dateOfBorn}
-                                            error={errorOpen !== ''}
-                                            onChange={(e) => handleChange(e)}
-                                            format="dd-MM-yyyy"
-                                        />
-                                        <p className="p-style">{errors["opening"]}</p>
-                                    </div>
+                                    <TextField required fullWidth
+                                        id="fechaNacimiento"
+                                        name="fechaNacimiento"
+                                        label="Fecha Nacimiento"
+                                        variant="outlined"
+                                        autoComplete="lname"
+                                        error={formErrors.fechaNacimiento !== null && formErrors.fechaNacimiento !== undefined && formErrors.fechaNacimiento !== ''}
+                                        helperText={formErrors.fechaNacimiento}
+                                        onChange={(e) => handleChange(e)}
+                                    />
                                 </Grid>
-                            </MuiPickersUtilsProvider>
                             <Grid item xs={12}>
                                 <TextField required fullWidth
                                            id="phoneNumber"

@@ -13,16 +13,15 @@ export function login({ username, password }) {
 }
 
 
-export function register({ username, email, roles, password, firstName, lastName, dni, phoneNumber }) {
+export function register({username, fechaNacimiento, role, password, firstName, secondName, phoneNumber }) {
     return http
         .post("/auth/signup", {
             username,
-            email,
-            roles,
+            fechaNacimiento,
+            role,
             password,
             firstName,
-            lastName,
-            dni,
+            secondName,
             phoneNumber
         })
         .then(response => {

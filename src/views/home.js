@@ -26,17 +26,18 @@ function Home() {
         <br></br>
         <div style = {{'marginTop':'70px'}}>
             <h4>Bienvenidos a la mejor aplicación para controlar tu equipo</h4>
-            {user && (
+            {user ? (
                 <h3>Tu nombre es {user.firstName}</h3>
+            ) : (
+                <div style = {{'textAlign':'center', 'margin': 'auto'}}>
+                    <Button variant="contained"  color="primary" onClick={() => history.push("/signup")}>
+                        Registrate
+                    </Button>
+                </div>
             )
             }
-            
         </div>
-        <div style = {{'textAlign':'center', 'margin': 'auto'}}>
-            <Button variant="contained"  color="primary" onClick={() => history.push("/signup")}>
-                Registrate
-            </Button>
-        </div>
+        
     </Container>
 }
 export default Home;
