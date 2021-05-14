@@ -86,7 +86,7 @@ export default function Team(props) {
 
     useEffect(() => {
         TeamService.getTeamByCoachId().then(teamRes => { 
-            setTeam(JSON.parse(teamRes.data));
+            setTeam(teamRes.data[0]);
         });
     }, [history, team])
 
