@@ -29,21 +29,21 @@ export default function SimpleBottomNavigation(props) {
   const history = useHistory();
   const {auth, isLogged} = useUser();
   const [team, setTeam] = useState({});
-  useEffect(() => {
-    if (
-      auth !== undefined &&
-      auth !== null &&
-      auth.role === 'ROLE_COACH'
-    ) {
-      TeamService.getTeamByCoachId(auth.username).then((teamRes) => { 
-        setTeam(teamRes);
-      })
-        .catch((error) => {
-          console.log('Error: ' + error);
-          history.push('/');
-        });
-    }
-  }, [auth, history]);
+  // useEffect(() => {
+  //   if (
+  //     auth !== undefined &&
+  //     auth !== null &&
+  //     auth.role === 'ROLE_COACH'
+  //   ) {
+  //     TeamService.getTeamByCoachId(auth.username).then((teamRes) => { 
+  //       setTeam(teamRes);
+  //     })
+  //       .catch((error) => {
+  //         console.log('Error: ' + error);
+  //         history.push('/');
+  //       });
+  //   }
+  // }, [auth, history]);
 
   return (
     <Drawer variant="persistent" anchor="bottom" open={isLogged}>

@@ -36,7 +36,7 @@ export default function CreateTeam() {
             }
             TeamService.createTeam(object).then(response => {
                 if (response.status === 201) {
-                    history.push({ pathname: '/'+auth.username , state: { data: true } });
+                    history.push({ pathname: '/team/'+auth.username , state: { data: true } });
                 } else {
                     setOpenSubmitIncorrect(true)
                 }

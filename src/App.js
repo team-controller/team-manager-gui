@@ -92,8 +92,8 @@ export default function App() {
             <Route exact path={["/", "/"]} component={Home} />
             <Route exact path={'/login'} component={Login} />
             <Route exact path={'/signup'} component={Signup} />
-            <Route exact path={'/createTeam/:userName'} component={CreateTeam} />
-            <Route exact path={'/team/:userName'} component={Team} />
+            <Route exact path={'/createTeam/'} component={CreateTeam} />
+            <Route exact path={'/team/'} component={Team} />
             
           </Switch>
         </div>

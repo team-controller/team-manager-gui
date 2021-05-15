@@ -18,7 +18,7 @@ export default function useUser() {
                 setState({ loading: false, error: false })
                 setAuth(user)
                 if(user.hasTeam === false){
-                    history.push("/createTeam")
+                    history.push(`/createTeam/`)
                 }
             })
             .catch(err => {
