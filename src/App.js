@@ -14,6 +14,7 @@ import Team from "./views/Team/team"
 import NotFoundPage from "./hooks/pageError"
 import Player from "./views/Player/players"
 import CreatePlayer from "./views/Player/createPlayer"
+import Games from "./views/Partidos/partidos"
 
 const drawerWidth = 240
 
@@ -102,6 +103,7 @@ export default function App() {
             <Route exact path={'/team/edit'} component={UpdateTeam} />
             <Route exact path={`/team/:idTeam/players`} component={Player} />
             <Route exact path={`/team/:idTeam/player/create`} component={CreatePlayer} />
+            <Route exact path={`/games/`} component={Games} />
           </Switch>
         </div>
         <div className={classes.colorBar}>

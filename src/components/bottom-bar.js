@@ -28,7 +28,6 @@ export default function SimpleBottomNavigation(props) {
   const [value, setValue] = React.useState(0);
   const history = useHistory();
   const {auth, isLogged} = useUser();
-  const [team, setTeam] = useState({});
   // useEffect(() => {
   //   if (
   //     auth !== undefined &&
@@ -73,7 +72,7 @@ export default function SimpleBottomNavigation(props) {
             xs={3}
             label="Tus Partidos"
             icon={<ListIcon />}
-            onClick={() => history.push(`/partidos`)}
+            onClick={() => history.push(`/games/`)}
           />
           <BottomNavigationAction
             xs={3}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import TeamService from "../../services/team.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
+import Context from '../../context/UserContext'
 import useUser from '../../hooks/useUser'
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +20,7 @@ export default function CreateTeam() {
     const [state, setState] = useState('')
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const history = useHistory()
-    const { auth } = useUser()
+    const { auth,updateCurrentTeam } = useUser()
     const admin = auth.role === "ROLE_COACH";
     useEffect(() => {
         if (!admin) history.push('/')
@@ -34,8 +35,9 @@ export default function CreateTeam() {
                 "name": state.name, "city": state.city, "stadiumName":state.stadiumName
             }
             TeamService.createTeam(object).then(response => {
-                if (response.status === 201) {
+                if (response.status === 200) {
                     history.push({ pathname: '/team/' , state: { data: true } });
+                    updateCurrentTeam(response.data)
                 } else {
                     setOpenSubmitIncorrect(true)
                 }

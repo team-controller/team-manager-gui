@@ -4,7 +4,7 @@ import * as authService from '../services/auth'
 import { useHistory } from 'react-router'
 
 export default function useUser() {
-    const { auth, setAuth, currentBar, setCurrentBar } = useContext(Context)
+    const { auth, setAuth, currentTeam, setCurrentTeam } = useContext(Context)
     const [state, setState] = useState({ loading: false, error: false })
     const [isUpdate, setUpdate] = useState(false)
     
@@ -17,8 +17,11 @@ export default function useUser() {
                 window.sessionStorage.setItem('user', JSON.stringify(user))
                 setState({ loading: false, error: false })
                 setAuth(user)
-                if(user.hasTeam === false){
+                if(!user.team){
                     history.push(`/createTeam/`)
+                }else{ 
+                    updateCurrentTeam(user.team)
+                    history.push(`/`)
                 }
             })
             .catch(err => {
@@ -75,38 +78,15 @@ export default function useUser() {
             })
     }, [history])
 
-    const updateBraintreeData = useCallback((braintreeData) => {
-        setState({ loading: true, error: false })
-        authService.updateBraintreeData(braintreeData)
-            .then(() => {
-                let user = JSON.parse(window.sessionStorage.getItem('user'))
-                user.braintreeMerchantId = braintreeData.merchantId
-                user.braintreePublicKey = braintreeData.publicKey
-                user.braintreePrivateKey = braintreeData.privateKey
-                window.sessionStorage.setItem('user', JSON.stringify(user))
-                setUpdate(true)
-            })
-            .catch((err) => {
-                setUpdate(false)
-                if (err.response?.status === 400) {
-                    setState({loading: false, error: "Los datos no se han enviado correctamente"})
-                } else if (err.response?.status === 403) {
-                    setState({loading: false, error: "No autorizado"})
-                } else {
-                    history.push("/pageNotFound")
-                }
-            })
-    }, [history])
-
     const logout = useCallback(() => {
         history.push("/")
         window.sessionStorage.removeItem('user')
         setAuth(null)
     }, [setAuth, history])
  
-    const updateCurrentBar = useCallback((bar) => {
-        setCurrentBar(bar)
-    }, [setCurrentBar])
+    const updateCurrentTeam = useCallback((team) => {
+        setCurrentTeam(team)
+    }, [setCurrentTeam])
 
     return {
         isLogged: Boolean(auth),
@@ -116,9 +96,8 @@ export default function useUser() {
         update,
         logout,
         auth,
-        currentBar,
-        updateCurrentBar,
-        updateBraintreeData,
+        currentTeam,
+        updateCurrentTeam,
         error: state.error
     }
 

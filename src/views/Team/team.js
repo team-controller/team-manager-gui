@@ -78,6 +78,8 @@ export default function Team(props) {
     useEffect(() => {
         TeamService.getTeam().then(teamRes => { 
             setTeam(teamRes.data[0]);
+        }).catch((e) => {
+            history.push('/createTeam')
         });
     }, [history, team])
 
