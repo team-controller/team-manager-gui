@@ -179,19 +179,6 @@ export default function Players(props) {
                 </Table>
             </CardContent>
             </Card>
-            <CardContent>
-              <div style={{ textAlign: 'center' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ ...stylesComponent.buttonBack }}
-                  onClick={() => this.props.history.goBack()}
-                >
-                  Volver
-                </Button>
-              </div>
-            </CardContent>
         </div>
-
     )
 }
