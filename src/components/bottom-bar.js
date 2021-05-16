@@ -35,7 +35,7 @@ export default function SimpleBottomNavigation(props) {
   //     auth !== null &&
   //     auth.role === 'ROLE_COACH'
   //   ) {
-  //     TeamService.getTeamByCoachId(auth.username).then((teamRes) => { 
+  //     TeamService.getTeam(auth.username).then((teamRes) => { 
   //       setTeam(teamRes);
   //     })
   //       .catch((error) => {

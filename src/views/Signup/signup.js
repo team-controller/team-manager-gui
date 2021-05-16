@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
     const classes = useStyles();
     const history = useHistory();
-    const [selectedFile, setSelectedFile] = useState();
     const [formData, setFormData] = useState({})
     const [checkData, setCheckData] = useState({})
     const [formErrors, setFormErrors] = useState({})
@@ -94,21 +93,6 @@ export default function SignUp() {
             signup({username, fechaNacimiento, role, password, firstName, secondName, phoneNumber})
         }
     }
-    const selectFile = (e) => {
-        let f = e.target.files.item(0);
-        const fr = new FileReader();
-        fr.onload = () => {
-          let blob = btoa(fr.result);
-          console.log(blob);
-          let object = {
-            fileName: f.name,
-            fileType: f.type,
-            data: blob,
-          };
-          setSelectedFile(object);
-        };
-        fr.readAsBinaryString(f);
-      };
 
     function handleValidation() {
         let valid = true
@@ -236,24 +220,6 @@ export default function SignUp() {
                             <Grid item xs={"auto"} className={classes.eye}>
                                 <i onClick={togglePasswordVisiblity}>{passwordShown ? <VisibilityIcon/> :
                                     <VisibilityOffIcon/>}</i>
-                            </Grid>
-                            <Grid container alignItems="center">
-                              <input
-                                accept="image/*"
-                                id="contained-button-file"
-                                type="file"
-                                className={classes.inputFile}
-                                data-testid={'prueba'}
-                                onChange={selectFile}
-                              />
-                              <label
-                                htmlFor="contained-button-file"
-                                style={{ margin: '20px 0' }}
-                              >
-                                <Button variant="contained" component="span">
-                                  Subir imágenes
-                                </Button>
-                              </label>
                             </Grid>
                         </Grid>
                         <Button

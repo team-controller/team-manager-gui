@@ -1,15 +1,19 @@
-import React, { Component } from "react";
-import { Switch, Route, Link } from "react-router-dom";
-import "./App.css";
+import React, { Component } from "react"
+import { Switch, Route, Link } from "react-router-dom"
+import "./App.css"
 
-import Home from "./views/home";
+import Home from "./views/home"
 import BottomBar from './components/bottom-bar'
-import { makeStyles, createMuiTheme} from "@material-ui/core/styles";
-import Login from "./views/Login";
-import Signup from "./views/Signup/signup";
-import Header from "./components/navBar";
-import CreateTeam from "./views/Team/createTeam";
-import Team from "./views/Team/team";
+import { makeStyles, createMuiTheme} from "@material-ui/core/styles"
+import Login from "./views/Login"
+import Signup from "./views/Signup/signup"
+import Header from "./components/navBar"
+import CreateTeam from "./views/Team/createTeam"
+import UpdateTeam from "./views/Team/updateTeam"
+import Team from "./views/Team/team"
+import NotFoundPage from "./hooks/pageError"
+import Player from "./views/Player/players"
+import CreatePlayer from "./views/Player/createPlayer"
 
 const drawerWidth = 240
 
@@ -90,11 +94,14 @@ export default function App() {
         <div className="container mt-3">
           <Switch>
             <Route exact path={["/", "/"]} component={Home} />
+            <Route exact path={'/pageNotFound/'} component={NotFoundPage} />
             <Route exact path={'/login'} component={Login} />
             <Route exact path={'/signup'} component={Signup} />
             <Route exact path={'/createTeam/'} component={CreateTeam} />
             <Route exact path={'/team/'} component={Team} />
-            
+            <Route exact path={'/team/edit'} component={UpdateTeam} />
+            <Route exact path={`/team/:idTeam/players`} component={Player} />
+            <Route exact path={`/team/:idTeam/player/create`} component={CreatePlayer} />
           </Switch>
         </div>
         <div className={classes.colorBar}>

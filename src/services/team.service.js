@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 
 class TeamService {
     
-    getTeamByCoachId() {
+    getTeam() {
         return http.get("/team/", {headers: authHeader()})
     }
 
@@ -11,9 +11,14 @@ class TeamService {
         return http.post("/createTeam", object, {headers: authHeader()})
     }
 
-    updateTeam(object, teamId) {
-        return http.put("/team/" + teamId, object, {headers: authHeader()})
+    updateTeam(object) {
+        return http.put("/team/edit", object, {headers: authHeader()})
     }
+
+    deleteTeam() {
+        return http.delete("/team/delete", {headers: authHeader()})
+    }
+
 }
 
 export default new TeamService();

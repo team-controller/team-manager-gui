@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import TeamService from "../../services/team.service"
+import PlayerService from "../../services/player.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import useUser from '../../hooks/useUser'
+import { useParams } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,10 +17,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateTeam() {
     const classes = useStyles();
+    const params = useParams();
     const [state, setState] = useState('')
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const history = useHistory()
     const { auth } = useUser()
+    const idTeam = params.idTeam
     const admin = auth.role === "ROLE_COACH";
     useEffect(() => {
         if (!admin) history.push('/')
@@ -27,15 +30,17 @@ export default function CreateTeam() {
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        if (state.name === undefined || state.name === "" || state.city === undefined || state.city === "" || state.stadiumName === undefined ||state.stadiumName === "") {
+        if (state.firstName === undefined || state.firstName === "") {
             setOpenSubmitIncorrect(true)
         } else {
             const object = {
-                "name": state.name, "city": state.city, "stadiumName":state.stadiumName
+                "name": state.name,
+                "city": state.city, 
+                "stadiumName":state.stadiumName
             }
-            TeamService.createTeam(object).then(response => {
+            PlayerService.createPlayer(idTeam, object).then(response => {
                 if (response.status === 201) {
-                    history.push({ pathname: '/team/' , state: { data: true } });
+                    history.push({ pathname: `/team/${idTeam}/player/create` , state: { data: true } });
                 } else {
                     setOpenSubmitIncorrect(true)
                 }
@@ -72,12 +77,12 @@ export default function CreateTeam() {
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div style={{ marginTop: '20px' }}>
-                            <TextField className='input-title' id="city" label="Ciudad" name="city" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="city" label="Ciudad" name="city" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div style={{ marginTop: '20px' }}>
-                            <TextField className='input-title' id="stadiumName" label="Nombre Estadio" name="stadiumName" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="stadiumName" label="Nombre Estadio" name="stadiumName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button
@@ -86,7 +91,7 @@ export default function CreateTeam() {
                             color="primary"
                             style={{ ...stylesComponent.buttonCrear }}>
                             Enviar
-                    </Button>
+                        </Button>
                         <div className={stylesComponent.snak}>
                             <Snackbar open={openSubmitIncorrect} autoHideDuration={6000} onClose={handleClose}>
                                 <Alert onClose={handleClose} severity="error">
