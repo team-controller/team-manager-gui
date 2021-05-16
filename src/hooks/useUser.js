@@ -38,7 +38,7 @@ export default function useUser() {
         authService.register({ username, fechaNacimiento, role, password, firstName, secondName, phoneNumber })
             .then(() => {
                 history.push({
-                    pathname: '/createTeam',
+                    pathname: '/login',
                     search: '?registered=true'
                 })
             })
