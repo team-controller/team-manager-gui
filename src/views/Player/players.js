@@ -146,8 +146,8 @@ export default function Players(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                        {players.map((row) => {
-                            <TableRow key={row.id}>
+                        {players && players.map((row,index) => (
+                            <TableRow key={index}>
                                 <TableCell align="center"component="th" scope="row">
                                         {row.firstName}
                                 </TableCell>
@@ -184,7 +184,7 @@ export default function Players(props) {
                                     </Button>
                                 </TableCell>
                             </TableRow>
-                        })}
+                        ))}
                     </TableBody>
                 </Table>
             </CardContent>
