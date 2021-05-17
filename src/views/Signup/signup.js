@@ -11,8 +11,6 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import DateFnsUtils from '@date-io/date-fns';
-import {MuiPickersUtilsProvider, KeyboardDateTimePicker} from "@material-ui/pickers";
 
 
 import {useHistory} from 'react-router'
@@ -55,7 +53,6 @@ export default function SignUp() {
     const [formErrors, setFormErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const [now, setNow] = useState(new Date())
-    const [dateOfBorn, setDateOfBorn] = useState(new Date(now.getTime() + 2 * 60000))
     const role = 'ROLE_COACH'
     const phonePatt = new RegExp("^[+]*[(]?[0-9]{1,4}[)]?[-s./0-9]*$")
 

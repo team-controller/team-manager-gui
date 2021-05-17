@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CreateTeam() {
+export default function CreatePlayer() {
     const classes = useStyles();
     const params = useParams();
     const [state, setState] = useState('')
@@ -24,6 +24,7 @@ export default function CreateTeam() {
     const { auth } = useUser()
     const idTeam = params.idTeam
     const admin = auth.role === "ROLE_COACH";
+    const player = auth.role === "ROLE_PLAYER";
     useEffect(() => {
         if (!admin) history.push('/')
     }, [admin, history])
@@ -34,13 +35,17 @@ export default function CreateTeam() {
             setOpenSubmitIncorrect(true)
         } else {
             const object = {
-                "name": state.name,
-                "city": state.city, 
-                "stadiumName":state.stadiumName
+                "username": state.username,
+                "password": state.password,
+                "firstName": state.firstName, 
+                "secondName":state.secondName,
+                "phoneNumber": state.phoneNumber,
+                "fechaNacimiento": state.fechaNacimiento,
+                "role": player
             }
             PlayerService.createPlayer(idTeam, object).then(response => {
                 if (response.status === 201) {
-                    history.push({ pathname: `/team/${idTeam}/player/create` , state: { data: true } });
+                    history.push({ pathname: `/team/${idTeam}/players` , state: { data: true } });
                 } else {
                     setOpenSubmitIncorrect(true)
                 }
@@ -66,23 +71,38 @@ export default function CreateTeam() {
         <Container fixed>
             <div style={{ marginTop: '90px', marginBottom: '100px' }}>
                 <Typography align="center" className='h5' variant="h5" gutterBottom>
-                    Crea tu equipo
+                    Registra tu jugador
             </Typography>
                 <div style={{ margin:'0px 0px 0px 20px' }}>
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="name" label="Nombre" name="name" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="username" label="Nombre de usuario" name="username" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
-                            <div style={{ marginTop: '20px' }}>
-                                <TextField className='input-title' id="city" label="Ciudad" name="city" onChange={(e) => handleChange(e)} />
+                            <div>
+                                <TextField className='input-title' id="password" label="Contraseña" name="password" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
-                            <div style={{ marginTop: '20px' }}>
-                                <TextField className='input-title' id="stadiumName" label="Nombre Estadio" name="stadiumName" onChange={(e) => handleChange(e)} />
+                            <div>
+                                <TextField className='input-title' id="firstname" label="Nombre" name="firstname" onChange={(e) => handleChange(e)} />
+                            </div>
+                        </Grid>
+                        <Grid container justify="center" alignItems="center" >
+                            <div>
+                                <TextField className='input-title' id="secondname" label="Apellidos" name="secondname" onChange={(e) => handleChange(e)} />
+                            </div>
+                        </Grid>
+                        <Grid container justify="center" alignItems="center" >
+                            <div>
+                                <TextField className='input-title' id="fechaNacimiento" label="Fecha de nacimiento" name="fechaNacimiento" onChange={(e) => handleChange(e)} />
+                            </div>
+                        </Grid>
+                        <Grid container justify="center" alignItems="center" >
+                            <div>
+                                <TextField className='input-title' id="phoneNumber" label="Teléfono" name="phoneNumber" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button

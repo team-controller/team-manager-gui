@@ -88,7 +88,7 @@ export default function CreateTeam() {
                             color="primary"
                             style={{ ...stylesComponent.buttonCrear }}>
                             Enviar
-                    </Button>
+                        </Button>
                         <div className={stylesComponent.snak}>
                             <Snackbar open={openSubmitIncorrect} autoHideDuration={6000} onClose={handleClose}>
                                 <Alert onClose={handleClose} severity="error">
