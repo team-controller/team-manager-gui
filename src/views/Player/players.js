@@ -76,19 +76,19 @@ export default function Players(props) {
     const idTeam = props.match.params.idTeam
     const {currentTeam,auth, isLogged} = useUser();
 
-    useEffect(() => {
-        if(!currentTeam){
-            history.push('/createTeam')
-        }
-     }, [isLogged, history, currentTeam])
+    // useEffect(() => {
+    //     if(!currentTeam){
+    //         history.push('/createTeam')
+    //     }
+    //  }, [isLogged, history, currentTeam])
 
     useEffect(() => {
         PlayerService.getAllPlayers(idTeam).then(res => { 
-            setPlayers(res.data);
+            setPlayers(res.data)
         }).catch(err => {
             console.log(err)
         })
-    }, [history, players])
+    }, [history])
 
 
 

@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
 export default function CreatePlayer() {
     const classes = useStyles();
     const params = useParams();
-    const [state, setState] = useState('')
+    const [state, setState] = useState({})
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const history = useHistory()
     const { auth } = useUser()
     const idTeam = params.idTeam
     const admin = auth.role === "ROLE_COACH";
-    const player = auth.role === "ROLE_PLAYER";
+    const player = "ROLE_PLAYER";
     useEffect(() => {
         if (!admin) history.push('/')
     }, [admin, history])
@@ -41,7 +41,7 @@ export default function CreatePlayer() {
                 "secondName":state.secondName,
                 "phoneNumber": state.phoneNumber,
                 "fechaNacimiento": state.fechaNacimiento,
-                "role": player
+                "rol": player
             }
             PlayerService.createPlayer(idTeam, object).then(response => {
                 if (response.status === 201) {
@@ -87,12 +87,12 @@ export default function CreatePlayer() {
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="firstname" label="Nombre" name="firstname" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="firstname" label="Nombre" name="firstName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="secondname" label="Apellidos" name="secondname" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="secondname" label="Apellidos" name="secondName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
