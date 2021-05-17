@@ -23,6 +23,7 @@ export default function CreatePlayer() {
     const history = useHistory()
     const { auth } = useUser()
     const idTeam = params.idTeam
+    const [position, setPosition] = useState('');
     const admin = auth.role === "ROLE_COACH";
     const player = "ROLE_PLAYER";
     useEffect(() => {
@@ -43,7 +44,7 @@ export default function CreatePlayer() {
                 "fechaNacimiento": state.fechaNacimiento,
                 "rol": player
             }
-            PlayerService.createPlayer(idTeam, object).then(response => {
+            PlayerService.createPlayer(idTeam, object,position).then(response => {
                 if (response.status === 201) {
                     history.push({ pathname: `/team/${idTeam}/players` , state: { data: true } });
                 } else {
@@ -57,6 +58,9 @@ export default function CreatePlayer() {
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.value });
+        if(event.target.name === 'posicion'){
+            setPosition(event.target.value );
+        }
     }
 
     const handleClose = (event, reason) => {
@@ -103,6 +107,11 @@ export default function CreatePlayer() {
                         <Grid container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="phoneNumber" label="Teléfono" name="phoneNumber" onChange={(e) => handleChange(e)} />
+                            </div>
+                        </Grid>
+                        <Grid container justify="center" alignItems="center" >
+                            <div>
+                                <TextField className='input-title' id="posicion" label="Teléfono" name="posicion" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button
