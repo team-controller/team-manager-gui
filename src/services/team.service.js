@@ -18,6 +18,9 @@ class TeamService {
     deleteTeam() {
         return http.delete("/team/delete", {headers: authHeader()})
     }
+    haveTeam(){
+        return http.get("/haveTeam/", {headers: authHeader()})
+    }
 
 }
 

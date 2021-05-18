@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import useUser from '../hooks/useUser';
+import teamService from "../services/team.service"
 
 function Home() {
     const useStyles = {
@@ -24,10 +25,14 @@ function Home() {
     }, [isLogged, history])
 
     useEffect(() => {
-        if(!currentTeam && auth){
-            history.push('/createTeam')
-        }
-     }, [isLogged, history, currentTeam])
+        teamService.haveTeam().then(res => {
+            if(res.data !== true){
+                history.push('/createTeam')
+            }
+        }).catch(e => { 
+            history.push('/pageNotFound')
+        })
+     }, [])
     
     return <Container component="main" maxWidth="xs">
         <CssBaseline />

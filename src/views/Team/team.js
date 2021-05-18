@@ -81,7 +81,7 @@ export default function Team(props) {
         }).catch((e) => {
             history.push('/createTeam')
         });
-    }, [history, team])
+    }, [history])
 
 
     const deleteTeam = () => {

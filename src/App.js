@@ -14,7 +14,8 @@ import Team from "./views/Team/team"
 import NotFoundPage from "./hooks/pageError"
 import Player from "./views/Player/players"
 import CreatePlayer from "./views/Player/createPlayer"
-import Games from "./views/Partidos/partidos"
+import Matches from "./views/Partidos/partidos"
+import CreateMatches from "./views/Partidos/createMatch"
 
 const drawerWidth = 240
 
@@ -103,7 +104,8 @@ export default function App() {
             <Route exact path={'/team/edit'} component={UpdateTeam} />
             <Route exact path={`/team/:idTeam/players`} component={Player} />
             <Route exact path={`/team/:idTeam/player/create`} component={CreatePlayer} />
-            <Route exact path={`/games/`} component={Games} />
+            <Route exact path={`/matches/`} component={Matches} />
+            <Route exact path={`/matches/create`} component={CreateMatches} />
           </Switch>
         </div>
         <div className={classes.colorBar}>

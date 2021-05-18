@@ -6,6 +6,7 @@ import PlayerService from "../../services/player.service"
 import {Card, CardContent, Table, Typography, TableHead, TableRow, TableCell, TableBody} from'@material-ui/core'
 import TeamService from "../../services/team.service"
 import useUser from "../../hooks/useUser"
+import teamService from "../../services/team.service"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,11 +77,15 @@ export default function Players(props) {
     const idTeam = props.match.params.idTeam
     const {currentTeam,auth, isLogged} = useUser();
 
-    // useEffect(() => {
-    //     if(!currentTeam){
-    //         history.push('/createTeam')
-    //     }
-    //  }, [isLogged, history, currentTeam])
+    useEffect(() => {
+        teamService.haveTeam().then(res => {
+            if(res.data !== true){
+                history.push('/createTeam')
+            }
+        }).catch(e => { 
+            history.push('/pageNotFound')
+        })
+     }, [])
 
     useEffect(() => {
         PlayerService.getAllPlayers(idTeam).then(res => { 

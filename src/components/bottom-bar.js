@@ -59,7 +59,7 @@ export default function SimpleBottomNavigation(props) {
           label="Inicio"
           icon={<Home />}
           component={Link}
-          to="/"
+          onClick={() => history.push(`/`)}
         />
         <BottomNavigationAction
           xs={3}
@@ -72,7 +72,7 @@ export default function SimpleBottomNavigation(props) {
             xs={3}
             label="Tus Partidos"
             icon={<ListIcon />}
-            onClick={() => history.push(`/games/`)}
+            onClick={() => history.push(`/matches/`)}
           />
           <BottomNavigationAction
             xs={3}
