@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import PlayerService from "../../services/player.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import useUser from '../../hooks/useUser'
-import { useParams } from 'react-router-dom'
 import moment from 'moment';
 import MatchesService from '../../services/matches.service'
 import DateFnsUtils from '@date-io/date-fns'
@@ -27,11 +25,9 @@ export default function CreateMatch() {
     const { auth } = useUser()
     const admin = auth.role === "ROLE_COACH";
     const [startTime, setStartTime] = useState(new Date())
-    const [endTime, setEndTime] = useState(new Date())
     const [callTime, setCallTime] = useState(new Date())
     const [date, setDate] = useState(new Date())
     const [startTimeError, setStartTimeError] = useState('')
-    const [endTimeError, setEndTimeError] = useState('')
     const [callTimeError, setCallTimeError] = useState('')
     const [dateError, setDateError] = useState('')
     
@@ -43,10 +39,9 @@ export default function CreateMatch() {
     const handleSubmit = (evt) => {
     evt.preventDefault();
         const object = {
-            "date": formatTime(date),
-            "startTime": formatTime(startTime),
-            "endTime": formatTime(endTime), 
-            "callTime": formatTime(callTime),
+            "date": moment(date).format("YYYY/MM/DD"),
+            "startTime": moment(startTime).format("HH:mm:ss"),
+            "callTime": moment(callTime).format("HH:mm:ss"),
             "callPlace": state.callPlace,
             "matchPlace": state.matchPlace,
             "visitorTeam": state.visitorTeam
@@ -62,25 +57,6 @@ export default function CreateMatch() {
         })
     }
 
-    function formatTime(time) {
-        let result = null
-        if (time !== null) {
-            let d = new Date(time.getTime() + 60000 * time.getTimezoneOffset())
-            let hour = d.getHours()
-            let minute = d.getMinutes()
-
-            if (hour.toString().length < 2) {
-                hour = '0' + hour;
-            }
-            if (minute.toString().length < 2) {
-                minute = '0' + minute;
-            }
-            var dateOfMatch = moment(date).format("YYYY-MM-DD");
-            result = dateOfMatch+"T" + [hour, minute, '00'].join(':') + ".000+00:00"
-            return result
-        }
-    }
-
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.value });
     }
@@ -90,14 +66,6 @@ export default function CreateMatch() {
             setStartTimeError("La hora no es válida")
         } else {
             setStartTimeError("")
-        }
-    }
-    const handleEndTimeChange = (time) => {
-        setEndTime(time)
-        if (time === undefined || isNaN(time) || time === null) {
-            setEndTimeError("La hora no es válida")
-        } else {
-            setEndTimeError("")
         }
     }
     const handleCallTimeChange = (time) => {
@@ -128,7 +96,7 @@ export default function CreateMatch() {
         <Container fixed>
             <div style={{ marginTop: '90px', marginBottom: '100px' }}>
                 <Typography align="center" className='h5' variant="h5" gutterBottom>
-                    Registra tu jugador
+                    Crea un nuevo Partido
             </Typography>
                 <div style={{ margin:'0px 0px 0px 20px' }}>
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
@@ -156,16 +124,6 @@ export default function CreateMatch() {
                                 </Grid>
                                 <Grid item xs={12} sm={6} lg={3} align="center">
                                     <KeyboardTimePicker
-                                        id={"endTime"}
-                                        label={"Hora del final"}
-                                        ampm={false}
-                                        value={endTime}
-                                        error={endTimeError !== ''}
-                                        helperText={endTimeError}
-                                        onChange={handleEndTimeChange}/>
-                                </Grid>
-                                <Grid item xs={12} sm={6} lg={3} align="center">
-                                    <KeyboardTimePicker
                                         id={"callTime"}
                                         label={"Hora de convocatoria"}
                                         ampm={false}
@@ -183,7 +141,7 @@ export default function CreateMatch() {
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="visitorTeam" label="Lugar de convocatoria" name="callPlace" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="callPlace" label="Lugar de convocatoria" name="callPlace" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >

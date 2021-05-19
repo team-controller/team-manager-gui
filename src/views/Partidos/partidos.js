@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react"
 import {useHistory} from 'react-router'
 import {makeStyles, useTheme} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import {Card, CardContent, Table, Typography, TableHead, TableRow, TableCell, TableBody, Container, CssBaseline, useMediaQuery, Grid, ButtonGroup} from'@material-ui/core'
+import {Container, useMediaQuery, Grid, ButtonGroup} from'@material-ui/core'
 import MatchesService from "../../services/matches.service"
 import useUser from "../../hooks/useUser"
 import { MatchCard } from "../../components/matchCards"
 import teamService from "../../services/team.service"
+import moment from "moment"
 
 const stylesComponent = {
     buttonCrear: {
@@ -63,8 +64,7 @@ export default function Games(props) {
      useEffect(() => {
          if(auth) {
             MatchesService.getAllMatchesByCoach().then(res => {
-                var newData = parseData(res.data);    
-                setMatches(newData);
+                setMatches(parseData(res.data));
             }).catch((e) => {
                 console.log(e);
             })
@@ -73,14 +73,7 @@ export default function Games(props) {
      function parseData(data) {
         var newData = []; 
         data.map((match) => {
-             var parseDate = match.date.substring(0,10);
-             var parsedCallTime = match.callTime.substring(11,19)
-             var parsedStartTime = match.startTime.substring(11,19)
-             var parsedEndTime = match.endTime.substring(11,19)
-             match.date = parseDate;
-             match.callTime = parsedCallTime;
-             match.startTime = parsedStartTime;
-             match.endTime = parsedEndTime;
+             match.date = moment(match.date).format("DD/MM/yyyy");
              newData.push(match);
          })
          return newData;

@@ -1,58 +1,56 @@
 import React, {useEffect, useState} from "react"
 import {useHistory} from 'react-router'
-import {makeStyles, useTheme} from '@material-ui/core/styles'
+//import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import TeamService from "../../services/team.service"
+import useUser from "../../hooks/useUser"
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        marginTop: theme.spacing(5),
-        marginBottom: '16%',
-    },
-    block: {
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        margin: 'auto',
-    },
-    bottomDivider: {
-        borderBottom: '0.1em solid darkgray',
-        lineHeight: '90%',
-    },
-    topBottomDivider: {
-        borderTop: '0.1em solid darkgray',
-        borderBottom: '0.1em solid darkgray',
-        lineHeight: '85%',
-    },
-    barHeader: {
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        margin: 'auto',
-        marginBottom: '10px',
-    },
-    wrapIcon: {
-        verticalAlign: 'middle',
-        display: 'inline-flex',
-    },
-    buttons: {
-        alignItems: 'stretch',
-    },
-    overflowHidden: {
-        overflow: 'hidden',
-    },
-    hrColor: {
-        borderTop: '1px solid darkgray',
-    },
-    snak: {
-        marginBottom: '20px',
-    },
-    colorBar: {
-        backgroundColor: 'white',
-    },
-}));
-
-const logo = require('../../img/LogoTeamManager.png')
-
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         marginTop: theme.spacing(5),
+//         marginBottom: '16%',
+//     },
+//     block: {
+//         padding: theme.spacing(1),
+//         textAlign: 'center',
+//         margin: 'auto',
+//     },
+//     bottomDivider: {
+//         borderBottom: '0.1em solid darkgray',
+//         lineHeight: '90%',
+//     },
+//     topBottomDivider: {
+//         borderTop: '0.1em solid darkgray',
+//         borderBottom: '0.1em solid darkgray',
+//         lineHeight: '85%',
+//     },
+//     barHeader: {
+//         padding: theme.spacing(1),
+//         textAlign: 'center',
+//         margin: 'auto',
+//         marginBottom: '10px',
+//     },
+//     wrapIcon: {
+//         verticalAlign: 'middle',
+//         display: 'inline-flex',
+//     },
+//     buttons: {
+//         alignItems: 'stretch',
+//     },
+//     overflowHidden: {
+//         overflow: 'hidden',
+//     },
+//     hrColor: {
+//         borderTop: '1px solid darkgray',
+//     },
+//     snak: {
+//         marginBottom: '20px',
+//     },
+//     colorBar: {
+//         backgroundColor: 'white',
+//     },
+// }));
 const stylesComponent = {
     buttonCrear: {
         backgroundColor: '#006e85',
@@ -72,9 +70,15 @@ const stylesComponent = {
 
 export default function Team(props) {
     const history = useHistory();
-    const classes = useStyles();
     const [team,setTeam] = useState({});
-
+    const {isLogged} = useUser();
+    
+    useEffect(() => {
+        if (!isLogged) {
+            history.push('/signup')
+        }
+    }, [isLogged, history])
+    
     useEffect(() => {
         TeamService.getTeam().then(teamRes => { 
             setTeam(teamRes.data[0]);

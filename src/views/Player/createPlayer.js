@@ -32,6 +32,12 @@ export default function CreatePlayer() {
         if (!admin) history.push('/')
     }, [admin, history])
 
+    useEffect(() => { 
+        if(!auth) {
+            history.push("/signup")
+        }
+    }, [history, auth])
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         if (handleValidation()){

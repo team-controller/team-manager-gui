@@ -28,21 +28,6 @@ export default function SimpleBottomNavigation(props) {
   const [value, setValue] = React.useState(0);
   const history = useHistory();
   const {auth, isLogged} = useUser();
-  // useEffect(() => {
-  //   if (
-  //     auth !== undefined &&
-  //     auth !== null &&
-  //     auth.role === 'ROLE_COACH'
-  //   ) {
-  //     TeamService.getTeam(auth.username).then((teamRes) => { 
-  //       setTeam(teamRes);
-  //     })
-  //       .catch((error) => {
-  //         console.log('Error: ' + error);
-  //         history.push('/');
-  //       });
-  //   }
-  // }, [auth, history]);
 
   return (
     <Drawer variant="persistent" anchor="bottom" open={isLogged}>
@@ -59,7 +44,7 @@ export default function SimpleBottomNavigation(props) {
           label="Inicio"
           icon={<Home />}
           component={Link}
-          onClick={() => history.push(`/`)}
+          to="/"
         />
         <BottomNavigationAction
           xs={3}

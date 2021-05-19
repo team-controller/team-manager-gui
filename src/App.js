@@ -18,6 +18,7 @@ import Matches from "./views/Partidos/partidos"
 import CreateMatches from "./views/Partidos/createMatch"
 import AddInfoPlayer from "./views/Player/addInfoPlayer"
 import EditPlayer from "./views/Player/editPlayer"
+import UpdateMatch from "./views/Partidos/editMatch"
 
 const drawerWidth = 240
 
@@ -97,7 +98,7 @@ export default function App() {
       </div>
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/"]} component={Home} />
+            <Route exact path={"/"} component={Home} />
             <Route exact path={'/pageNotFound/'} component={NotFoundPage} />
             <Route exact path={'/login'} component={Login} />
             <Route exact path={'/signup'} component={Signup} />
@@ -108,6 +109,7 @@ export default function App() {
             <Route exact path={`/team/:idTeam/player/create`} component={CreatePlayer} />
             <Route exact path={`/matches/`} component={Matches} />
             <Route exact path={`/matches/create`} component={CreateMatches} />
+            <Route exact path={`/matches/edit/:id`} component={UpdateMatch} />
             <Route exact path={`/team/:idTeam/player/:usernamePlayer/editMatch`} component={AddInfoPlayer} />
             <Route exact path={`/team/:idTeam/player/:usernamePlayer/edit`} component={EditPlayer} />
           </Switch>

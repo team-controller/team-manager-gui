@@ -24,7 +24,7 @@ export default function UpdateTeam(props) {
     const { auth } = useUser()
     const admin = auth.role === "ROLE_COACH"
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
-
+    const [errors, setErrors] = useState({})
     useEffect(() => {
         if (!admin) {
             history.push('/pageNotFound/')

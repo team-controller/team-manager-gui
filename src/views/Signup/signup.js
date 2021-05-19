@@ -52,7 +52,6 @@ export default function SignUp() {
     const [checkData, setCheckData] = useState({})
     const [formErrors, setFormErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
-    const [now, setNow] = useState(new Date())
     const role = 'ROLE_COACH'
     const phonePatt = new RegExp("^[+]*[(]?[0-9]{1,4}[)]?[-s./0-9]*$")
 

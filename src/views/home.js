@@ -7,17 +7,8 @@ import useUser from '../hooks/useUser';
 import teamService from "../services/team.service"
 
 function Home() {
-    const useStyles = {
-        centerImage: {
-            margin: 'auto',
-            width: '60%',
-            display: 'block',
-            backgroundColor: '#fafafa',
-            marginTop: '15px',
-        }
-    }
     const history =  useHistory();
-    const {currentTeam,auth, isLogged} = useUser();
+    const {auth, isLogged} = useUser();
     useEffect(() => {
         if (!isLogged) {
             history.push('/signup')
@@ -32,7 +23,7 @@ function Home() {
         }).catch(e => { 
             history.push('/pageNotFound')
         })
-     }, [])
+     }, [history])
     
     return <Container component="main" maxWidth="xs">
         <CssBaseline />

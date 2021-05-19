@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 
 export function MatchCard(props) {
   const classes = useStyles()
-  const {id,date, startTime, endTime,callTime,callPlace, status, matchPlace, localTeam, visitorTeam} = props
+  const {id,date, status,visitorTeam} = props
   const history = useHistory()
   const [openRemoveCorrect, setOpenRemoveCorrect] = useState(false)
   const [openRemoveInCorrect24h, setOpenRemoveInCorrect24h] = useState(false)
@@ -86,13 +86,10 @@ export function MatchCard(props) {
               Partido
           </Typography>
             <Typography variant="h5" component="h2">
-              Lugar: {callPlace}
+              Fecha: {date}
             </Typography>
             <Typography variant="h5" component="h2">
-              Hora Convocadotoria: {callTime}
-            </Typography>
-            <Typography variant="h5" component="h2">
-              Rival {visitorTeam}
+              Rival: {visitorTeam}
             </Typography>
             <Typography variant="body2" component="p">
               {status}
@@ -104,7 +101,7 @@ export function MatchCard(props) {
         <Grid item container xs={12}>
           <ButtonGroup fullWidth={true} aria-label="outlined primary button group"
                        orientation={phoneScreen? "vertical" : "horizontal"}>
-            <Button className={classes.buttonEditar} href={`/#/matches/edit`}>Editar Partido</Button>
+            <Button className={classes.buttonEditar} href={`/#/matches/edit/${id}`}>Editar Partido</Button>
             <Button className={classes.buttonBorrar} onClick={() => removeMatch()}>Eliminar Partido</Button>
           </ButtonGroup>
         </Grid>

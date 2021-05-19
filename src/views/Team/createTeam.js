@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect} from 'react'
 import TeamService from "../../services/team.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
-import Context from '../../context/UserContext'
 import useUser from '../../hooks/useUser'
 
 const useStyles = makeStyles((theme) => ({
