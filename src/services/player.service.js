@@ -7,16 +7,30 @@ class PlayerService {
         return http.get(`/team/${idTeam}/players`, {headers: authHeader()})
     }
 
-    createPlayer(idTeam, object) {
-        return http.post(`/team/${idTeam}/player/create`, object, {headers: authHeader()})
+    createPlayer(idTeam, object, position) {
+        if(position === undefined || position === "") {
+            position = "No definido"
+        }
+        return http.post(`/team/${idTeam}/player/${position}/create`, object, {headers: authHeader()})
     }
 
-    editPlayer(idTeam, usernamePlayer, object) {
-        return http.put(`/team/${idTeam}/player/${usernamePlayer}/edit`, object, {headers: authHeader()})
+    getPlayer(idTeam, usernamePlayer) {
+        return http.get(`/team/${idTeam}/player/${usernamePlayer}`, {headers: authHeader()})
     }
 
-    editPlayer(idTeam, usernamePlayer, object) {
-        return http.delete(`/team/${idTeam}/player/${usernamePlayer}/delete`, object, {headers: authHeader()})
+    editPlayer(idTeam, usernamePlayer, object, position) {
+        if(position === undefined || position === "") {
+            position = "No definido"
+        }
+        return http.put(`/team/${idTeam}/player/${usernamePlayer}/edit/${position}`, object, {headers: authHeader()})
+    }
+
+    addInfoPlayer(idTeam, usernamePlayer, object) {
+        return http.put(`/team/${idTeam}/player/${usernamePlayer}/editMatch`, object, {headers: authHeader()})
+    }
+
+    deletePlayer(idTeam, usernamePlayer) {
+        return http.delete(`/team/${idTeam}/player/${usernamePlayer}/delete`, {headers: authHeader()})
     }
     
 }

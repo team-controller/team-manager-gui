@@ -22,11 +22,10 @@ export default function CreatePlayer() {
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const history = useHistory()
     const { auth } = useUser()
+    const [errors, setErrors] = useState({});
     const idTeam = params.idTeam
-    const [position, setPosition] = useState('')
-    const admin = auth.role === "ROLE_COACH"
-    const player = "ROLE_PLAYER"
-    const [errors, setErrors] = useState({})
+    const admin = auth.role === "ROLE_COACH";
+    const usernamePlayer = params.usernamePlayer
 
     useEffect(() => {
         if (!admin) history.push('/')
@@ -36,15 +35,12 @@ export default function CreatePlayer() {
         evt.preventDefault();
         if (handleValidation()){
             const object = {
-                "username": state.username,
-                "password": state.password,
-                "firstName": state.firstName, 
-                "secondName":state.secondName,
-                "phoneNumber": state.phoneNumber,
-                "fechaNacimiento": state.fechaNacimiento,
-                "rol": player
+                "goalsPerMatch": state.goalsPerMatch,
+                "yellowsPerMatch": state.yellowsPerMatch,
+                "redPerMatch": state.redPerMatch, 
+                "minutesPerMatch":state.minutesPerMatch
             }
-            PlayerService.createPlayer(idTeam, object, position).then(response => {
+            PlayerService.addInfoPlayer(idTeam, usernamePlayer, object).then(response => {
                 if (response.status === 200) {
                     history.push({ pathname: `/team/${idTeam}/players` , state: { data: true } });
                 } else {
@@ -59,48 +55,40 @@ export default function CreatePlayer() {
     function handleValidation() {
         let objErrors = {};
         let valid = true;
-
-        const patternDate = new RegExp('^(\\d{4})[\\/](0?[1-9]|1[012])[\\/](0?[1-9]|[12][0-9]|3[01])$');
-        const patternMobile = new RegExp('^([67][0-9]{9})');
-
-        if(!state.username) {
+        if(!state.goalsPerMatch || state.goalsPerMatch<0) {
             valid = false;
-            objErrors['username'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['goalsPerMatch'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!state.firstName) {
+        if(!state.yellowsPerMatch || state.yellowsPerMatch < 0) {
             valid = false;
-            objErrors['firstName'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['yellowsPerMatch'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!state.secondName) {
+        if(!state.redPerMatch || state.redPerMatch<0) {
             valid = false;
-            objErrors['secondName'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['redPerMatch'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!state.fechaNacimiento || !state.fechaNacimiento.match(patternDate)) {
+        if(!state.minutesPerMatch || state.minutesPerMatch<0) {
             valid = false;
-            objErrors['fechaNacimiento'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['minutesPerMatch'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!state.phoneNumber || !state.phoneNumber.match(patternMobile)) {
+        if(state.redPerMatch>1) {
             valid = false;
-            objErrors['phoneNumber'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['redPerMatch'] = 'No se puede añadir más de una roja por partido'
         }
-        if(!state.password) {
+        if(state.yellowsPerMatch>2) {
             valid = false;
-            objErrors['password'] = 'Tienes que rellenar este campo con un valor válido'
+            objErrors['yellowPerMatch'] = 'No se puede añadir más de dos amarillas por partido'
         }
-        if(state.password<5) {
+        if(state.minutesPerMatch>120) {
             valid = false;
-            objErrors['password'] = 'Debe de tener más de 6 caracteres'
+            objErrors['minutesPerMatch'] = 'No se puede añadir más de 120 minutos por partido'
         }
-        
         setErrors(objErrors);
         return valid;
     }
-
+    
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.value });
-        if(event.target.name === 'posicion'){
-            setPosition(event.target.value );
-        }
     }
 
     const handleClose = (event, reason) => {
@@ -120,50 +108,31 @@ export default function CreatePlayer() {
                 <div style={{ margin:'0px 0px 0px 20px' }}>
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
                         <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="username" label="Nombre de usuario"
-                                helperText={errors.username} name="username" onChange={(e) => handleChange(e)} />
+                            <div style={{paddingTop: '20px'}}>
+                                <TextField className='input-title' type="number" 
+                                helperText={errors.goalsPerMatch} id="goalsPerMatch" 
+                                label="Goles en el partido" name="goalsPerMatch" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="password" label="Contraseña"
-                                helperText={errors.password} name="password" onChange={(e) => handleChange(e)} />
+                            <div style={{paddingTop: '20px'}}>
+                                <TextField className='input-title' type="number"
+                                 helperText={errors.yellowsPerMatch} id="yellowsPerMatch" 
+                                 label="Amarillas en el partido" name="yellowsPerMatch" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="firstname" label="Nombre"
-                                helperText={errors.firstName} name="firstName" onChange={(e) => handleChange(e)} />
+                            <div style={{paddingTop: '20px'}}>
+                                <TextField className='input-title' type="number" 
+                                helperText={errors.redPerMatch} id="redPerMatch" 
+                                label="Roja en el partido" name="redPerMatch" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="secondname" label="Apellidos"
-                                helperText={errors.secondName} name="secondName" onChange={(e) => handleChange(e)} />
-                            </div>
-                        </Grid>
-                        <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="fechaNacimiento" label="Fecha de nacimiento: yyyy/MM/dd"
-                                helperText={errors.fechaNacimiento} name="fechaNacimiento" onChange={(e) => handleChange(e)} />
-                            </div>
-                        </Grid>
-                        <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="phoneNumber" label="Teléfono"
-                                helperText={errors.phoneNumber} name="phoneNumber" onChange={(e) => handleChange(e)} />
-                            </div>
-                        </Grid>
-                        <Grid container justify="center" alignItems="center" >
-                            <div style={{marginTop: '20px' }}>
-                                <select style={{width: '192px'}} className='input-title' id="posicion" label="Posición" name="posicion" onChange={(e) => handleChange(e)}>
-                                    <option selected value="No definido">--</option>
-                                    <option value="Delantero">Delantero</option>
-                                    <option value="Centrocampista">Centrocampista</option>
-                                    <option value="Defensa">Defensa</option>
-                                    <option value="Portero">Portero</option>
-                                </select>
+                            <div style={{paddingTop: '20px'}}>
+                                <TextField className='input-title' type="number" 
+                                helperText={errors.minutesPerMatch} id="minutesPerMatch" 
+                                label="Minutos en el partido" name="minutesPerMatch" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button

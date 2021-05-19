@@ -4,7 +4,6 @@ import {makeStyles, useTheme} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import PlayerService from "../../services/player.service"
 import {Card, CardContent, Table, Typography, TableHead, TableRow, TableCell, TableBody} from'@material-ui/core'
-import TeamService from "../../services/team.service"
 import useUser from "../../hooks/useUser"
 import teamService from "../../services/team.service"
 
@@ -96,9 +95,22 @@ export default function Players(props) {
     }, [history])
 
 
+    const deletePlayer = (idTeam, usernamePlayer) => {
+        PlayerService.deletePlayer(idTeam, usernamePlayer).then((response) => {
+            if(response.status=== 200) {
+                history.go(0);
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+
+
 
     return(
-        <div>
+        <div style={{marginBottom:"100px"}}>
             <Typography variant="h3" align="center" style={{paddingTop: '75px' }}>
                 Lista de Jugadores
             </Typography>
@@ -108,7 +120,7 @@ export default function Players(props) {
                     color="primary"
                     style={{ ...stylesComponent.buttonCrear }} onClick={() => history.push(`/team/${idTeam}/player/create`)}> Crear Jugador </Button> 
             </div>
-            <Card style={{ margin: 'auto', maxWidth: 700 }}>
+            <Card style={{ margin: 'auto', maxWidth: 900}}>
             <CardContent>
                 <Table>
                     <TableHead >
@@ -174,18 +186,18 @@ export default function Players(props) {
                                 <TableCell align="center"component="th" scope="row">
                                     <Button variant="contained"
                                         color="primary"
-                                        style={{ ...stylesComponent.buttonBack }}
-                                        onClick={() => history.push(`/team/${idTeam}/player/` + row.username + "/edit")}> Editar Jugador
-                                    </Button>
-                                    <Button variant="contained"
-                                        color="primary"
-                                        style={{ ...stylesComponent.buttonBack }}
+                                        style={{ ...stylesComponent.buttonCrear }}
                                         onClick={() => history.push(`/team/${idTeam}/player/` + row.username + "/editMatch")}> Añadir info
                                     </Button>
                                     <Button variant="contained"
                                         color="primary"
-                                        style={{ ...stylesComponent.buttonBack }}
-                                        onClick={() => history.push(`/team/${idTeam}/player/` + row.username + "/delete")}> Eliminar
+                                        style={{ ...stylesComponent.buttonCrear }}
+                                        onClick={() => history.push(`/team/${idTeam}/player/` + row.username + "/edit")}> Editar jugador
+                                    </Button>
+                                    <Button variant="contained"
+                                        color="primary"
+                                        style={{ ...stylesComponent.buttonCrear }}
+                                        onClick={() => deletePlayer(idTeam, row.username)}> Eliminar
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -194,6 +206,13 @@ export default function Players(props) {
                 </Table>
             </CardContent>
             </Card>
+            <Button
+                variant="contained"
+                color="primary"
+                style={{ ...stylesComponent.buttonCrear }}
+                onClick={() => history.goBack()}>
+                Volver
+            </Button>
         </div>
     )
 }

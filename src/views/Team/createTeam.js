@@ -21,16 +21,16 @@ export default function CreateTeam() {
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const history = useHistory()
     const { auth,updateCurrentTeam } = useUser()
-    const admin = auth.role === "ROLE_COACH";
+    const admin = auth.role === "ROLE_COACH"
+    const [errors, setErrors] = useState({})
+
     useEffect(() => {
         if (!admin) history.push('/')
     }, [admin, history])
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        if (state.name === undefined || state.name === "" || state.city === undefined || state.city === "" || state.stadiumName === undefined ||state.stadiumName === "") {
-            setOpenSubmitIncorrect(true)
-        } else {
+        if (handleValidation()) {
             const object = {
                 "name": state.name, "city": state.city, "stadiumName":state.stadiumName
             }
@@ -45,6 +45,26 @@ export default function CreateTeam() {
                 console.log("Error" + error)
             })
         }
+    }
+
+    function handleValidation() {
+        let objErrors = {};
+        let valid = true;
+
+        if(!state.name) {
+            valid = false;
+            objErrors['name'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        if(!state.city) {
+            valid = false;
+            objErrors['city'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        if(!state.stadiumName) {
+            valid = false;
+            objErrors['stadiumName'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        setErrors(objErrors);
+        return valid;
     }
 
     const handleChange = (event) => {
@@ -69,17 +89,20 @@ export default function CreateTeam() {
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="name" label="Nombre" name="name" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="name" label="Nombre"
+                                    helperText={errors.name} name="name" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div style={{ marginTop: '20px' }}>
-                            <TextField className='input-title' id="city" label="Ciudad" name="city" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="city" label="Ciudad" 
+                                    helperText={errors.city} name="city" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div style={{ marginTop: '20px' }}>
-                            <TextField className='input-title' id="stadiumName" label="Nombre Estadio" name="stadiumName" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="stadiumName" label="Nombre Estadio"
+                                    helperText={errors.stadiumName} name="stadiumName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button

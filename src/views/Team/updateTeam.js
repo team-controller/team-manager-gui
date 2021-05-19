@@ -43,9 +43,7 @@ export default function UpdateTeam(props) {
 
     const handleSubmit = (evt) => {
         evt.preventDefault()
-        if (team.name === undefined || team.name === "" || team.city === undefined || team.city === "" || team.stadiumName === undefined ||team.stadiumName === "") {
-            setOpenSubmitIncorrect(true)
-        } else {
+        if (handleValidation()) {
             const object = {
                 "name": team.name, "city": team.city, "stadiumName": team.stadiumName
             }
@@ -58,6 +56,26 @@ export default function UpdateTeam(props) {
                 history.push('/pageNotFound')
             })
         }
+    }
+
+    function handleValidation() {
+        let objErrors = {};
+        let valid = true;
+
+        if(!team.name) {
+            valid = false;
+            objErrors['name'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        if(!team.city) {
+            valid = false;
+            objErrors['city'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        if(!team.stadiumName) {
+            valid = false;
+            objErrors['stadiumName'] = 'Tienes que rellenar este campo con un valor válido'
+        }
+        setErrors(objErrors);
+        return valid;
     }
 
     const handleChange = (event) => {
@@ -102,6 +120,7 @@ export default function UpdateTeam(props) {
                             id="name" 
                             label="Nombre" 
                             name="name" 
+                            helperText={errors.name}
                             onChange={(e) => handleChange(e)} 
                             value={team.name} />
                         </div>
@@ -112,6 +131,7 @@ export default function UpdateTeam(props) {
                         id="city" 
                         label="Ciudad" 
                         name="city" 
+                        helperText={errors.city}
                         onChange={(e) => handleChange(e)} 
                         value={team.city} />
                         </div>
@@ -122,6 +142,7 @@ export default function UpdateTeam(props) {
                         id="stadiumName" 
                         label="Nombre Estadio" 
                         name="stadiumName" 
+                        helperText={errors.stadiumName}
                         onChange={(e) => handleChange(e)} 
                         value={team.stadiumName}/>
                         </div>
