@@ -67,7 +67,7 @@ export default function CreatePlayer() {
         let valid = true;
 
         const patternDate = new RegExp('^(\\d{4})[\\/](0?[1-9]|1[012])[\\/](0?[1-9]|[12][0-9]|3[01])$');
-        const patternMobile = new RegExp('^([67][0-9]{9})');
+        const patternMobile = new RegExp('^([67][0-9]{8})');
 
         if(!state.username) {
             valid = false;
