@@ -24,6 +24,9 @@ const useStyles = makeStyles({
   disabled: {
     backgroundColor: '#dddddd',
   },
+  pendiente: {
+    backgroundColor: '#ffffff',
+  },
   cardAction: {
     width: '100%',
   },
@@ -69,7 +72,7 @@ export function MatchCard(props) {
       }
     })
   }
-  const statusColor = status === "GANADO" ? classes.free : status === "PERDIDO" ? classes.occupied : classes.disabled
+  const statusColor = status === "GANADO" ? classes.free : status === "PERDIDO" ? classes.occupied : status === "EMPATADO" ? classes.disabled : classes.pendiente
   return (
     <div>
       <Card className={statusColor} variant="outlined">

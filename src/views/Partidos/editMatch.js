@@ -49,6 +49,7 @@ export default function UpdateMatch(props){
     const [dateError] = useState('')
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const [ableToSetGoals, setAbleToSetGoals] = useState(false);
+    const [ableToSetGoalsMessage, setAbleToSetGoalsMessage] = useState(false);
     const [disabledDate, setDisabledDate] = useState(false);
     const [status, setStatus] = useState("");
     const [dateMatch, setDateMatch] = useState("");
@@ -68,34 +69,30 @@ export default function UpdateMatch(props){
             if(moment(moment()).isAfter(res.data.date)){
                 setDisabledDate(true)
             }
+            if(moment(res.data.date).isBefore(moment().subtract(1,"days"))){
+                setAbleToSetGoals(true);
+                
+            }else{
+                setAbleToSetGoalsMessage(true);
+            }
             setMatch(res.data)
         })
-    },[id])
+    },[id,dateMatch])
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setOpenSubmitIncorrect(false)
         setAbleToSetGoals(false);
+        setAbleToSetGoalsMessage(false)
         setErrors([])
     };
     const handleChange = (event) => {
         const name = event.target.name;
-        if(name === "goalsLocal" ||name === "goalsVisitor"){
-            if(moment(dateMatch).isAfter(moment().subtract(1,"days"))){
-                setAbleToSetGoals(true);
-            }else{
-                setMatch({
-                    ...match,
-                    [name]: event.target.value,
-                });
-            }
-        }else {
-            setMatch({
-                ...match,
-                [name]: event.target.value,
-            });
-        }
+        setMatch({
+            ...match,
+            [name]: event.target.value,
+        });
 
     };
     const handleChangeStatus = (event) => {
@@ -315,13 +312,23 @@ export default function UpdateMatch(props){
                             <div>
                                 <FormControl style={{margin:'25px 35px 0px 0px'}} focused>
                                     <InputLabel htmlFor="goalsLocal">Goles tu Equipo</InputLabel>
-                                    <Input className='input-title' type="number" inputProps={{ min: "0", max: "10"}} id="goalsLocal" label="Goles tu Equipo" name="goalsLocal" onChange={(e) => handleChange(e)} value={match.goalsLocal} />
+                                    {ableToSetGoals ? (
+                                        <Input className='input-title' type="number" inputProps={{ min: "0", max: "10"}} id="goalsLocal" label="Goles tu Equipo" name="goalsLocal" onChange={(e) => handleChange(e)} value={match.goalsLocal} />
+                                    ):(
+                                        <Input disabled className='input-title' type="number" inputProps={{ min: "0", max: "10"}} id="goalsLocal" label="Goles tu Equipo" name="goalsLocal" onChange={(e) => handleChange(e)} value={match.goalsLocal} />
+                                    )}
+                                    
                                 </FormControl>
                             </div>
                             <div>
                                 <FormControl style={{margin:'25px 0px 0px 20px'}} focused>
                                     <InputLabel htmlFor="goalsVisitor">Goles del Rival</InputLabel>
-                                    <Input className='input-title' type="number" inputProps={{ min: "0", max: "10", size:"40"}} id="goalsVisitor" label="Goles del Rival" name="goalsVisitor" onChange={(e) => handleChange(e)} value={match.goalsVisitor} />
+                                    {ableToSetGoals ? (
+                                        <Input className='input-title' type="number" inputProps={{ min: "0", max: "10", size:"40"}} id="goalsVisitor" label="Goles del Rival" name="goalsVisitor" onChange={(e) => handleChange(e)} value={match.goalsVisitor} />
+                                    ) : (
+                                        <Input disabled className='input-title' type="number" inputProps={{ min: "0", max: "10", size:"40"}} id="goalsVisitor" label="Goles del Rival" name="goalsVisitor" onChange={(e) => handleChange(e)} value={match.goalsVisitor} />
+                                    )
+                                    }
                                 </FormControl>
                             </div>
                         </Grid>
@@ -356,13 +363,10 @@ export default function UpdateMatch(props){
                                     ))}
                             </Alert>
                             </Snackbar>
-                            
-                        </div>
-                        <div className={stylesComponent.snak}>
-                            <Snackbar open={ableToSetGoals} autoHideDuration={6000} onClose={handleClose}>
-                                <Alert onClose={handleClose} severity="error">
-                                    No se pueden introducir los goles antes de la fecha del partido
-                                </Alert>
+                            <Snackbar open={ableToSetGoalsMessage} autoHideDuration={6000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="info">
+                                    No podras introducir un resultado hasta que no pase la fecha del partido
+                            </Alert>
                             </Snackbar>
                         </div>
                     </form>

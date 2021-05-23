@@ -212,8 +212,8 @@ export default function MatchDetails(props){
                 </CardContent>
               </Grid>
             </Grid>
-            {!ableToDeConvocate && 
-            <Typography align="center" variant="h5" className={useStyles.title} gutterBottom>
+            {!ableToDeConvocate && isCoach && 
+            <Typography align="center" variant="h6" className={useStyles.title} gutterBottom>
                 <span>La fecha ha pasado por tanto no puede modificar convocatorias</span>
             </Typography>
             
