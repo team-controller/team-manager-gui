@@ -37,7 +37,7 @@ export default function EditPlayer(props) {
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const [errors, setErrors] = useState({})
     const [newPassword, setNewPassword] = useState('')
-    const [dateError, setDateError] = useState('')
+    const [dateError] = useState('')
 
     useEffect(() => {
         if (!admin) {

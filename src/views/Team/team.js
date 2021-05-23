@@ -3,12 +3,11 @@ import {useHistory} from 'react-router'
 import Button from '@material-ui/core/Button'
 import TeamService from "../../services/team.service"
 import useUser from "../../hooks/useUser"
-import { Grid,Container, CardContent, Typography, Card, CardActions, useMediaQuery, useTheme, ButtonGroup } from "@material-ui/core"
+import { Grid,Container, CardContent, Typography, Card, CardActions, useMediaQuery, useTheme, ButtonGroup} from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import MatchesService from "../../services/matches.service"
 import moment from "moment"
 import { MatchCard } from "../../components/matchCards"
-
 
 const stylesComponent = {
     buttonCrear: {
@@ -61,18 +60,12 @@ export default function Team(props) {
             history.push('/signup')
         }
     }, [isLogged, history])
-    
-    useEffect(() => {
-        TeamService.getTeam().then(teamRes => { 
-            setTeam(teamRes.data[0]);
-        }).catch((e) => {
-            history.push('/createTeam')
-        });
-    }, [history])
+
     useEffect(() => {
         if(auth) {
            MatchesService.getThreeNextMatchesByCoach(auth.team.id).then(res => {
-               setMatches(parseData(res.data));
+               setMatches(parseData(res.data[0]));
+               setTeam(res.data[1]);
            }).catch((e) => {
                console.log(e);
            })
@@ -102,7 +95,7 @@ export default function Team(props) {
 
     return (
         <div>
-            <div key={team.id} style={{marginTop: "90px"}}>
+            <div style={{marginTop: "90px"}}>
                 <Grid container justify="center">
                     <Grid item component={Card} xs={6}>
                         <CardContent>
@@ -110,13 +103,13 @@ export default function Team(props) {
                             <span >Bienvenido a la vista de tu equipo {auth.firstName}</span>
                           </Typography>
                           <Typography align="center" variant="h5" className={useStyles.title}>
-                          <span >Nombre: {team.name} </span>
+                          {team &&(<span >Nombre: {team.name} </span>)} 
                           </Typography>
                           <Typography align="center" variant="h5" className={useStyles.title}>
-                          <span >Ciudad: {team.city} </span>
+                          {team && (<span >Ciudad:  {team.city}  </span>)}
                           </Typography>
                           <Typography align="center" variant="h5" className={useStyles.title}>
-                          <span >Estadio: {team.stadiumName} </span>
+                          {team &&  (<span >Estadio: {team.stadiumName}  </span>)}
                           </Typography>
                         </CardContent>
                         <CardActions>
@@ -146,8 +139,6 @@ export default function Team(props) {
                     </Grid>
                 </Grid>
             </div>
-            <div>
-            </div>
             <Container className={phoneScreen? classes.rootPhone : classes.root} maxWidth={"lg"}>
                 <h1 align="center">Tus próximos {matches.length} partidos</h1>
                 <Grid container spacing={3}>
@@ -158,6 +149,7 @@ export default function Team(props) {
                     ))}
                 </Grid>
             </Container>
+
         </div>
         )
 

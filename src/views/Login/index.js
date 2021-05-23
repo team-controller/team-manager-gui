@@ -43,13 +43,15 @@ export default function Login() {
     const [formData, setFormData] = useState({})
     const [formErrors, setFormErrors] = useState({})
 
-    const {isLogged, login, error} = useUser()
+    const {auth, login, error} = useUser()
 
     useEffect(() => {
-        if (isLogged) {
+        if (auth && auth.team === null) {
+            history.push('/createTeam')
+        }else if(auth && auth.team !== null){
             history.push('/team')
         }
-    }, [isLogged, history])
+    }, [auth, history])
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})

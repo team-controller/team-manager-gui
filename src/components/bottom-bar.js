@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import {Home} from '@material-ui/icons';
 import SportsSoccerIcon from '@material-ui/icons/SportsSoccer';
 import ListIcon from '@material-ui/icons/List';
 import { Link } from 'react-router-dom';
@@ -33,13 +32,6 @@ export default function SimpleBottomNavigation(props) {
         showLabels
         className={classes2.root}
       >
-        {/* <BottomNavigationAction
-          xs={3}
-          label="Inicio"
-          icon={<Home />}
-          component={Link}
-          to="/"
-        /> */}
         <BottomNavigationAction
           xs={3}
           label="Tu equipo"
