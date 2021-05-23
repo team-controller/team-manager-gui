@@ -14,11 +14,13 @@ import Team from "./views/Team/team"
 import NotFoundPage from "./hooks/pageError"
 import Player from "./views/Player/players"
 import CreatePlayer from "./views/Player/createPlayer"
-import Matches from "./views/Partidos/partidos"
+import Matches from "./views/Partidos/listMatches"
 import CreateMatches from "./views/Partidos/createMatch"
 import AddInfoPlayer from "./views/Player/addInfoPlayer"
 import EditPlayer from "./views/Player/editPlayer"
 import UpdateMatch from "./views/Partidos/editMatch"
+import MatchDetails from "./views/Partidos/detailsMatch"
+import ConvocatePlayers from "./views/Partidos/convocatePlayers"
 
 const drawerWidth = 240
 
@@ -110,6 +112,8 @@ export default function App() {
             <Route exact path={`/matches/`} component={Matches} />
             <Route exact path={`/matches/create`} component={CreateMatches} />
             <Route exact path={`/matches/edit/:id`} component={UpdateMatch} />
+            <Route exact path={`/match/details/:id`} component={MatchDetails} />
+            <Route exact path={`/convocate/:id`} component={ConvocatePlayers} />
             <Route exact path={`/team/:idTeam/player/:usernamePlayer/editMatch`} component={AddInfoPlayer} />
             <Route exact path={`/team/:idTeam/player/:usernamePlayer/edit`} component={EditPlayer} />
           </Switch>

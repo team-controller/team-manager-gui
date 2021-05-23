@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react'
 import PlayerService from "../../services/player.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
-import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
+import { TextField, Button, Snackbar, Container, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import useUser from '../../hooks/useUser'
 import { useParams } from 'react-router-dom'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,8 +30,11 @@ export default function CreatePlayer() {
     const admin = auth.role === "ROLE_COACH"
     const player = "ROLE_PLAYER"
     const [errors, setErrors] = useState({})
+    const [date, setDate] = useState(new Date())
+    const [dateError, setDateError] = useState('')
 
     useEffect(() => {
+        setPosition("No Definido") //Se setea aqui 
         if (!admin) history.push('/')
     }, [admin, history])
 
@@ -47,7 +53,7 @@ export default function CreatePlayer() {
                 "firstName": state.firstName, 
                 "secondName":state.secondName,
                 "phoneNumber": state.phoneNumber,
-                "fechaNacimiento": state.fechaNacimiento,
+                "fechaNacimiento": moment(date).format("YYYY/MM/DD"),
                 "rol": player
             }
             PlayerService.createPlayer(idTeam, object, position).then(response => {
@@ -81,7 +87,7 @@ export default function CreatePlayer() {
             valid = false;
             objErrors['secondName'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!state.fechaNacimiento || !state.fechaNacimiento.match(patternDate)) {
+        if(!date) {
             valid = false;
             objErrors['fechaNacimiento'] = 'Tienes que rellenar este campo con un valor válido'
         }
@@ -108,12 +114,23 @@ export default function CreatePlayer() {
             setPosition(event.target.value );
         }
     }
-
+    const handleDateChange = (time) => {
+        setDate(time)
+        if (time === undefined || isNaN(time) || time === null) {
+            setDateError("La fecha no es válida")
+        } else {
+            setDateError("")
+        }
+    }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setOpenSubmitIncorrect(false)
+    };
+    const handleChangPosition = (event) => {       
+        setPosition(event.target.value );
+
     };
 
     return (
@@ -125,52 +142,66 @@ export default function CreatePlayer() {
             </Typography>
                 <div style={{ margin:'0px 0px 0px 20px' }}>
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
-                        <Grid container justify="center" alignItems="center" >
+                        <Grid style={{ marginTop:'20px' }} container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="username" label="Nombre de usuario"
                                 helperText={errors.username} name="username" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
+                        <Grid style={{ marginTop:'20px' }} container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="password" label="Contraseña"
                                 helperText={errors.password} name="password" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
+                        <Grid style={{ marginTop:'20px' }} container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="firstname" label="Nombre"
                                 helperText={errors.firstName} name="firstName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
+                        <Grid style={{ marginTop:'20px' }} container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="secondname" label="Apellidos"
                                 helperText={errors.secondName} name="secondName" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
-                            <div>
-                                <TextField className='input-title' id="fechaNacimiento" label="Fecha de nacimiento: yyyy/MM/dd"
-                                helperText={errors.fechaNacimiento} name="fechaNacimiento" onChange={(e) => handleChange(e)} />
-                            </div>
+                        <Grid item xs={12} sm={6} lg={3} style={{margin: '25px auto 10px', width:'16%'}} >
+                            <MuiPickersUtilsProvider style={{marginLeft: '30px'}} utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                        id={"date"}
+                                        label={"Fecha de Nacimiento"}
+                                        format="yyyy/MM/dd"
+                                        value={date}
+                                        error={dateError !== ''}
+                                        helperText={dateError}
+                                        onChange={handleDateChange}/>
+                            </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
+                        <Grid style={{ marginTop:'20px' }} container justify="center" alignItems="center" >
                             <div>
                                 <TextField className='input-title' id="phoneNumber" label="Teléfono"
                                 helperText={errors.phoneNumber} name="phoneNumber" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid container justify="center" alignItems="center" >
-                            <div style={{marginTop: '20px' }}>
-                                <select style={{width: '192px'}} className='input-title' id="posicion" label="Posición" name="posicion" onChange={(e) => handleChange(e)}>
-                                    <option selected value="No definido">--</option>
-                                    <option value="Delantero">Delantero</option>
-                                    <option value="Centrocampista">Centrocampista</option>
-                                    <option value="Defensa">Defensa</option>
-                                    <option value="Portero">Portero</option>
-                                </select>
-                            </div>
+                        
+                        <Grid xs={12} container justify="center" alignItems="center" >
+                            <FormControl style={{marginTop:'25px',width:'16%'}}>
+                                <InputLabel id="demo-simple-select-label">Posición</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={position}
+                                  onChange={handleChangPosition}
+                                  autoWidth="true"
+                                >
+                                  <MenuItem value="No definido">--</MenuItem>
+                                  <MenuItem value="Delantero">Delantero</MenuItem>
+                                  <MenuItem value="Centrocampista">Centrocampista</MenuItem>
+                                  <MenuItem value="Defensa">Defensa</MenuItem>
+                                  <MenuItem value="Portero">Portero</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Button
                             type="submit"

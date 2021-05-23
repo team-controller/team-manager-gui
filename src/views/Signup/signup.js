@@ -11,12 +11,13 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import DateFnsUtils from '@date-io/date-fns'
 
 import {useHistory} from 'react-router'
-
+import moment from "moment"
 import useUser from '../../hooks/useUser'
 import {Alert, AlertTitle} from '@material-ui/lab'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -54,6 +55,8 @@ export default function SignUp() {
     const [passwordShown, setPasswordShown] = useState(false);
     const role = 'ROLE_COACH'
     const phonePatt = new RegExp("^[+]*[(]?[0-9]{1,4}[)]?[-s./0-9]*$")
+    const [date, setDate] = useState(new Date())
+    const [dateError, setDateError] = useState('')
 
     const {isLogged, signup, error} = useUser()
 
@@ -71,17 +74,21 @@ export default function SignUp() {
         setFormData({...formData, [e.target.name]: e.target.value})
         setFormErrors({})
     }
-
-    const handleCheckChange = (e) => {
-        setCheckData({...checkData, [e.target.name]: e.target.checked})
-        setFormErrors({})
+    
+    const handleDateChange = (time) => {
+        setDate(time)
+        if (time === undefined || isNaN(time) || time === null) {
+            setDateError("La fecha no es válida")
+        } else {
+            setDateError("")
+        }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
         if (handleValidation()) {
             let username = formData.username
-            let fechaNacimiento = formData.fechaNacimiento
+            let fechaNacimiento = moment(date).format("YYYY/MM/DD")
             let password = formData.password
             let firstName = formData.firstName
             let secondName = formData.secondName
@@ -97,10 +104,10 @@ export default function SignUp() {
             valid = false
             objErrors["username"] = "El nombre de usuario debe tener más de 3 caracteres y menos de 20"
         }
-        // if (!formData.fechaNacimiento || !emailPatt.test(formData.email) || formData.email.length > 50) {
-        //     valid = false
-        //     objErrors["email"] = "Se debe introducir un correo electrónico válido y no mayor de 50 caracteres"
-        // }
+        if (!date) {
+            valid = false
+            objErrors["email"] = "Debes introducir una fecha de nacimiento"
+        }
         if (!formData.password || formData.password.length < 6 || formData.password.length > 40) {
             valid = false
             objErrors["password"] = "La contraseña debe tener más de 6 caracteres y menos de 40"
@@ -176,18 +183,19 @@ export default function SignUp() {
                                            onChange={(e) => handleChange(e)}
                                 />
                             </Grid>
-                                <Grid item xs={12}>
-                                    <TextField required fullWidth
-                                        id="fechaNacimiento"
-                                        name="fechaNacimiento"
-                                        label="Fecha Nacimiento"
-                                        variant="outlined"
-                                        autoComplete="lname"
-                                        error={formErrors.fechaNacimiento !== null && formErrors.fechaNacimiento !== undefined && formErrors.fechaNacimiento !== ''}
-                                        helperText={formErrors.fechaNacimiento}
-                                        onChange={(e) => handleChange(e)}
-                                    />
+                            <MuiPickersUtilsProvider style={{marginLeft: '30px'}} utils={DateFnsUtils}>
+                                <Grid item xs={12} sm={6} lg={12} style={{margin: '25px auto 10px'}} >
+                                            <KeyboardDatePicker
+                                                id={"date"}
+                                                label={"Fecha de Nacimiento"}
+                                                format="yyyy/MM/dd"
+                                                value={date}
+                                                error={dateError !== ''}
+                                                helperText={dateError}
+                                                onChange={handleDateChange}
+                                                inputVariant="outlined"/>
                                 </Grid>
+                            </MuiPickersUtilsProvider>
                             <Grid item xs={12}>
                                 <TextField required fullWidth
                                            id="phoneNumber"

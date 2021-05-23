@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import PlayerService from "../../services/player.service"
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
-import { TextField, Button, Snackbar, Container, Grid, Typography } from '@material-ui/core'
+import { TextField, Button, Snackbar, Container, Grid, Typography, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import useUser from '../../hooks/useUser'
 import { useParams } from 'react-router-dom'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -34,6 +36,8 @@ export default function EditPlayer(props) {
     const rol = "ROLE_PLAYER";
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const [errors, setErrors] = useState({})
+    const [dateError, setDateError] = useState('')
+    const [newPassword, setNewPassword] = useState('')
 
     useEffect(() => {
         if (!admin) {
@@ -42,6 +46,7 @@ export default function EditPlayer(props) {
             PlayerService.getPlayer(idTeam, usernamePlayer).then(
                 res => {
                     if (res.status === 200) {
+                        setPosition(res.data.position)
                         setPlayer(res.data)
                     } else {
                         history.push('/pageNotFound/')
@@ -54,6 +59,9 @@ export default function EditPlayer(props) {
     const handleSubmit = (evt) => {
         evt.preventDefault()
         if (handleValidation()) {
+            if(newPassword !== "" && newPassword !== player.password){
+                player.password = newPassword
+            }
             const object = {
                 "username": player.username, "password": player.password, "firstName": player.firstName, "secondName": player.secondName,
                  "phoneNumber": player.phoneNumber, "fechaNacimiento": player.fechaNacimiento, "rol": rol
@@ -68,7 +76,17 @@ export default function EditPlayer(props) {
             })
         }
     }
+    const handleDateChange = (event) => {
+        setPlayer({
+            ...player,
+            fechaNacimiento: event,
+        });
+    }
 
+    const handleChangPosition = (event) => {       
+        setPosition(event.target.value );
+
+    };
     function handleValidation() {
         let objErrors = {};
         let valid = true;
@@ -88,7 +106,7 @@ export default function EditPlayer(props) {
             valid = false;
             objErrors['secondName'] = 'Tienes que rellenar este campo con un valor válido'
         }
-        if(!player.fechaNacimiento || !player.fechaNacimiento.match(patternDate)) {
+        if(!player.fechaNacimiento) {
             valid = false;
             objErrors['fechaNacimiento'] = 'Tienes que rellenar este campo con un valor válido'
         }
@@ -100,7 +118,7 @@ export default function EditPlayer(props) {
             valid = false;
             objErrors['password'] = 'Tienes que rellenar este campo con un valor válido'
         }else {
-            if(player.password<5) {
+            if(newPassword !== "" && newPassword<5) {
                 valid = false;
                 objErrors['password'] = 'Debe de tener más de 6 caracteres'
             }
@@ -115,6 +133,10 @@ export default function EditPlayer(props) {
         if(event.target.name === 'posicion'){
             setPosition(event.target.value );
         }
+        if(event.target.name === 'password'){
+            setNewPassword(event.target.value);
+        }
+        
     }
 
     const handleClose = (event, reason) => {
@@ -165,11 +187,12 @@ export default function EditPlayer(props) {
                         <div style={{ marginTop: '20px' }}>
                             <TextField className='input-title' 
                                 id="password" 
-                                label="Contraseña" 
+                                label="Nueva Contraseña" 
                                 name="password" 
+                                placeholder="Introduce una nueva contraseña"
                                 helperText={errors.password}
                                 onChange={(e) => handleChange(e)} 
-                                value={player.password} 
+                                value={newPassword} 
                             />
                         </div>
                     </Grid>
@@ -209,30 +232,37 @@ export default function EditPlayer(props) {
                             />
                         </div>
                     </Grid>
-                    <Grid container justify="center" alignItems="center" >
-                        <div style={{ marginTop: '20px' }}>
-                            <TextField className='input-title' 
-                                id="fechaNacimiento" 
-                                label="Fecha de Nacimiento" 
-                                name="fechaNacimiento" 
-                                helperText={errors.fechaNacimiento}
-                                onChange={(e) => handleChange(e)} 
-                                value={player.fechaNacimiento}
-                            />
-                        </div>
-                    </Grid>
-                    <Grid container justify="center" alignItems="center" >
-                        <div style={{marginTop: '20px' }}>
-                            <p style={{color:'#8D8D8D', marginBottom: '0px'}}>Posición</p>
-                            <select style={{width: '192px'}} className='input-title' id="posicion" label="Posición" name="posicion" onChange={(e) => handleChange(e)}>
-                                <option selected value="No definido">--</option>
-                                <option value="Delantero">Delantero</option>
-                                <option value="Centrocampista">Centrocampista</option>
-                                <option value="Defensa">Defensa</option>
-                                <option value="Portero">Portero</option>
-                            </select>
-                        </div>
-                    </Grid>
+                    <Grid item xs={12} sm={6} lg={3} style={{margin: '25px auto 10px', width:'16%'}} >
+                            <MuiPickersUtilsProvider style={{marginLeft: '30px'}} utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                        id={"date"}
+                                        label={"Fecha de Nacimiento"}
+                                        format="yyyy/MM/dd"
+                                        value={player.fechaNacimiento}
+                                        error={dateError !== ''}
+                                        helperText={errors.fechaNacimiento}
+                                        onChange={handleDateChange}
+                                        focused/>
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid xs={12} container justify="center" alignItems="center" >
+                            <FormControl style={{marginTop:'25px',width:'16%'}}>
+                                <InputLabel id="demo-simple-select-label">Posición</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={position}
+                                  onChange={handleChangPosition}
+                                  autoWidth="true"
+                                >
+                                  <MenuItem value="No definido">--</MenuItem>
+                                  <MenuItem value="Delantero">Delantero</MenuItem>
+                                  <MenuItem value="Centrocampista">Centrocampista</MenuItem>
+                                  <MenuItem value="Defensa">Defensa</MenuItem>
+                                  <MenuItem value="Portero">Portero</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     <Button
                         type="submit"
                         variant="contained"
@@ -244,7 +274,7 @@ export default function EditPlayer(props) {
                         variant="contained"
                         color="primary"
                         onClick={() => history.goBack()}
-                        style={{ marginLeft: 5 }}>
+                        style={{ ...stylesComponent.buttonCrear }}>
                         Volver
                     </Button>
                     <div className={stylesComponent.snak}>

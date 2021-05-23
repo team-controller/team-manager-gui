@@ -35,6 +35,9 @@ export default function CreateTeam() {
             }
             TeamService.createTeam(object).then(response => {
                 if (response.status === 200) {
+                    auth.team = response.data;
+                    sessionStorage.removeItem("user");
+                    sessionStorage.setItem("user", JSON.stringify(auth));
                     history.push({ pathname: '/team/' , state: { data: true } });
                     updateCurrentTeam(response.data)
                 } else {

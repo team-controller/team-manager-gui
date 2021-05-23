@@ -158,7 +158,7 @@ export default function UpdateTeam(props) {
                         variant="contained"
                         color="primary"
                         onClick={() => history.goBack()}
-                        style={{ marginLeft: 5 }}>
+                        style={{...stylesComponent.buttonCrear}}>
                         Volver
                     </Button>
                     <div className={stylesComponent.snak}>

@@ -30,31 +30,78 @@ export default function CreateMatch() {
     const [startTimeError, setStartTimeError] = useState('')
     const [callTimeError, setCallTimeError] = useState('')
     const [dateError, setDateError] = useState('')
+    const [errors, setErrors] = useState([]);
     
     const player = "ROLE_PLAYER";
     useEffect(() => {
         if (!admin) history.push('/')
     }, [admin, history])
 
-    const handleSubmit = (evt) => {
-    evt.preventDefault();
-        const object = {
-            "date": moment(date).format("YYYY/MM/DD"),
-            "startTime": moment(startTime).format("HH:mm:ss"),
-            "callTime": moment(callTime).format("HH:mm:ss"),
-            "callPlace": state.callPlace,
-            "matchPlace": state.matchPlace,
-            "visitorTeam": state.visitorTeam
+
+    function validateFormulario(){
+        let errors = []
+        if(state.callPlace === "" || state.callPlace === undefined) {
+            let err = "Lugar de convocatoria vacío"
+            errors.push(err)
         }
-        MatchesService.createMatch(object).then(response => {
-            if (response.status === 200) {
-                history.push({ pathname: `/matches` , state: { data: true } });
-            } else {
-                setOpenSubmitIncorrect(true)
+        if(state.matchPlace === "" ||state.matchPlace === undefined){
+            let err = "Lugar del partido vacío"
+            errors.push(err);
+        }
+        if(state.visitorTeam === "" ||state.visitorTeam === undefined){
+            let err = "Equipo rival vacío"
+            errors.push(err);
+        }
+        if(date === null ){
+            let err = "Fecha vacía"
+            errors.push(err);
+        }
+        if(startTime === null){
+            let err = "Hora de comienzo vacía"
+            errors.push(err);
+        }
+        if(callTime === null){
+            let err = "Hora de convocatoria vacía"
+            errors.push(err);
+        }
+        if(moment(moment().subtract(1,"days")).isAfter(date)){
+            let err = "La fecha del partido es anterior a la fecha actual"
+            errors.push(err);
+        }
+        if(moment(callTime).isAfter(moment(startTime))){
+            let err = "La hora de convocatoria debe ser anterior a la hora del partido";
+            errors.push(err);
+        }
+        return errors;
+    }
+
+
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        let errorsValidation = validateFormulario();
+        setErrors(errorsValidation);
+        if(errorsValidation.length !== 0){
+            setOpenSubmitIncorrect(true)
+        }else{
+            const object = {
+                "date": moment(date).format("YYYY/MM/DD"),
+                "startTime": moment(startTime).format("HH:mm:ss"),
+                "callTime": moment(callTime).format("HH:mm:ss"),
+                "callPlace": state.callPlace,
+                "matchPlace": state.matchPlace,
+                "visitorTeam": state.visitorTeam
             }
-        }).catch(error => {
-            console.log("Error" + error)
-        })
+            MatchesService.createMatch(object).then(response => {
+                if (response.status === 200) {
+                    history.push({ pathname: `/matches` , state: { data: true } });
+                } else {
+                    setOpenSubmitIncorrect(true)
+                }
+            }).catch(error => {
+                setOpenSubmitIncorrect(true)
+                console.log("Error" + error)
+            })
+        }
     }
 
     const handleChange = (event) => {
@@ -79,7 +126,7 @@ export default function CreateMatch() {
     const handleDateChange = (time) => {
         setDate(time)
         if (time === undefined || isNaN(time) || time === null) {
-            setDateError("La hora no es válida")
+            setDateError("La fecha no es válida")
         } else {
             setDateError("")
         }
@@ -114,16 +161,6 @@ export default function CreateMatch() {
                                 </Grid>
                                 <Grid item xs={12} sm={6} lg={3} align="center">
                                     <KeyboardTimePicker
-                                        id={"startTime"}
-                                        label={"Hora de comienzo"}
-                                        ampm={false}
-                                        value={startTime}
-                                        error={startTimeError !== ''}
-                                        helperText={startTimeError}
-                                        onChange={handleStartTimeChange}/>
-                                </Grid>
-                                <Grid item xs={12} sm={6} lg={3} align="center">
-                                    <KeyboardTimePicker
                                         id={"callTime"}
                                         label={"Hora de convocatoria"}
                                         ampm={false}
@@ -132,11 +169,21 @@ export default function CreateMatch() {
                                         helperText={callTimeError}
                                         onChange={handleCallTimeChange}/>
                                 </Grid>
+                                <Grid item xs={12} sm={6} lg={3} align="center">
+                                    <KeyboardTimePicker
+                                        id={"startTime"}
+                                        label={"Hora de comienzo"}
+                                        ampm={false}
+                                        value={startTime}
+                                        error={startTimeError !== ''}
+                                        helperText={startTimeError}
+                                        onChange={handleStartTimeChange}/>
+                                </Grid>
                             </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="matchPlace" label="Lugar del Partido" name="matchPlace" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="matchPlace" label="Lugar del partido" name="matchPlace" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
@@ -146,7 +193,7 @@ export default function CreateMatch() {
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <TextField className='input-title' id="visitorTeam" label="Equipo Visitante" name="visitorTeam" onChange={(e) => handleChange(e)} />
+                                <TextField className='input-title' id="visitorTeam" label="Equipo rival" name="visitorTeam" onChange={(e) => handleChange(e)} />
                             </div>
                         </Grid>
                         <Button
@@ -159,7 +206,9 @@ export default function CreateMatch() {
                         <div className={stylesComponent.snak}>
                             <Snackbar open={openSubmitIncorrect} autoHideDuration={6000} onClose={handleClose}>
                                 <Alert onClose={handleClose} severity="error">
-                                    Tienes que rellenar el formulario correctamente
+                                    Tienes los siguentes errores en el formulario {errors.map(err => (
+                                        <p>{err}</p>
+                                    ))}
                             </Alert>
                             </Snackbar>
                         </div>

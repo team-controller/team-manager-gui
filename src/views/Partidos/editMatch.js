@@ -32,9 +32,13 @@ const useStyles = makeStyles((theme) => ({
             top: '-5px',
         },
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
 }));
 
-export default function UpdateMatch(){
+export default function UpdateMatch(props){
     const classes = useStyles();
     const history = useHistory()
     const [match, setMatch] = useState({});
@@ -45,6 +49,12 @@ export default function UpdateMatch(){
     const [callTimeError, setCallTimeError] = useState('')
     const [dateError, setDateError] = useState('')
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
+    const [openHoursIncorrect, setOpenHoursIncorrect] = useState(false)
+    const [ableToSetGoals, setAbleToSetGoals] = useState(false);
+    const [disabledDate, setDisabledDate] = useState(false);
+    const [status, setStatus] = useState("");
+    const [dateMatch, setDateMatch] = useState("");
+    const [errors, setErrors] = useState([]);
     useEffect(() => {
         if(!auth){
             history.push("/signup")
@@ -53,9 +63,13 @@ export default function UpdateMatch(){
 
     useEffect(() => {
         MatchesService.getOneMatch(id).then(res => {
-           // res.data.date = formatDate(res.data.date);
             res.data.startTime = formatStringToDate(res.data.date,res.data.startTime);
             res.data.callTime = formatStringToDate(res.data.date, res.data.callTime);
+            setStatus(res.data.status);
+            setDateMatch(res.data.date);
+            if(moment(moment()).isAfter(res.data.date)){
+                setDisabledDate(true)
+            }
             setMatch(res.data)
         })
     },[id])
@@ -64,46 +78,62 @@ export default function UpdateMatch(){
             return;
         }
         setOpenSubmitIncorrect(false)
+        setOpenHoursIncorrect(false);
+        setAbleToSetGoals(false);
+        setErrors([])
     };
     const handleChange = (event) => {
         const name = event.target.name;
+        if(name === "goalsLocal" ||name === "goalsVisitor"){
+            if(moment(dateMatch).isAfter(moment().subtract(1,"days"))){
+                setAbleToSetGoals(true);
+            }else{
+                setMatch({
+                    ...match,
+                    [name]: event.target.value,
+                });
+            }
+        }else {
+            setMatch({
+                ...match,
+                [name]: event.target.value,
+            });
+        }
+
+    };
+    const handleChangeStatus = (event) => {
         setMatch({
             ...match,
-            [name]: event.target.value,
+            status: event.target.value,
         });
+        setStatus(event.target.value)
     };
+    
     const handleStartTimeChange = (event) => {
-        const name = event.target.name
+        setMatch({
+            ...match,
+            startTime: event,
+        });
+    }
 
-        // if (time === undefined || isNaN(time) || time === null) {
-        //     setStartTimeError("La hora no es válida")
-        // } else {
-        //     setStartTimeError("")
-        // }
+    const handleCallTimeChange = (event) => {
+        setMatch({
+            ...match,
+            callTime: event,
+        });
     }
-    const handleEndTimeChange = (time) => {
-        // setEndTime(time)
-        // if (time === undefined || isNaN(time) || time === null) {
-        //     setEndTimeError("La hora no es válida")
-        // } else {
-        //     setEndTimeError("")
-        // }
-    }
-    const handleCallTimeChange = (time) => {
-        // setCallTime(time)
-        // if (time === undefined || isNaN(time) || time === null) {
-        //     setCallTimeError("La hora no es válida")
-        // } else {
-        //     setCallTimeError("")
-        // }
-    }
-    const handleDateChange = (time) => {
-        // setDate(time)
-        // if (time === undefined || isNaN(time) || time === null) {
-        //     setDateError("La hora no es válida")
-        // } else {
-        //     setDateError("")
-        // }
+    const handleDateChange = (event) => {
+        if(moment(moment()).isAfter(event)){
+            let err = "Si el partido ya ha pasado no puedes cambiar la fecha más al pasado"
+            errors.push(err);
+            setErrors(errors)
+            setOpenSubmitIncorrect(true);
+        }else{
+            setMatch({
+                ...match,
+                date: event,
+            });
+        }
     }
     function formatStringToDate(fecha, horas) {
         if (!fecha && !horas) {
@@ -115,56 +145,86 @@ export default function UpdateMatch(){
             return newDate
         }
     }
-
-    function formatDate(date){
-        if(!date){
-            return null
-        }else{
-            const newDate = moment(date).format("YYYY-MM-DD")
-            const dateRes = newDate + "T00:00:00"
-            return dateRes 
+    function validateFormulario(){
+        let errors = []
+        if(match.callPlace === "") {
+            let err = "Lugar de convocatoria vacío"
+            errors.push(err)
         }
+        if(match.matchPlace === ""){
+            let err = "Lugar del partido vacío"
+            errors.push(err);
+        }
+        if(match.visitorTeam === ""){
+            let err = "Equipo rival vacío"
+            errors.push(err);
+        }
+        if(match.status === ""){
+            let err = "Estado de partido incorrecto"
+            errors.push(err);
+        }
+        if(match.date === null ){
+            let err = "Fecha vacía"
+            errors.push(err);
+        }
+        if(match.startTime === null){
+            let err = "Hora de comienzo vacía"
+            errors.push(err);
+        }
+        if(match.callTime === null){
+            let err = "Hora de convocatoria vacía"
+            errors.push(err);
+        }
+        
+        if(moment(match.callTime).isAfter(moment(match.startTime))){
+            let err = "La hora de convocatoria debe ser anterior a la hora del partido";
+            errors.push(err);
+        }
+        return errors;
     }
+    function getStatusByGoals(goalsLocal, goalsVisitante){
+        let status = "PENDIENTE";
+        if(parseInt(goalsLocal) > parseInt(goalsVisitante)){
+            status = "GANADO"
+        }else if(parseInt(goalsLocal) === parseInt(goalsVisitante)) { 
+            status = "EMPATADO"
+        }else{ 
+            status = "PERDIDO"
+        }
+        return status;
+    }
+
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         //AQUI HACER VALIDACIONES 
-        const object = {
-            "date": formatTime(match.date),
-            "startTime": formatTime(match.startTime),
-            "callTime": formatTime(match.callTime),
-            "callPlace": match.callPlace,
-            "matchPlace": match.matchPlace,
-            "visitorTeam": match.visitorTeam,
-            "status" : match.status,
-            "localTeam": match.localTeam
-        }
-        MatchesService.UpdateTeam(object,id).then(res => {
-            if(res.status === "201"){
-                history.push({ pathname: `/matches` , state: { data: true } });
+        let errorsValidation = validateFormulario();
+        setErrors(errorsValidation);
+        if(errorsValidation.length !== 0){
+            setOpenSubmitIncorrect(true)
+        }else{
+            const object = {
+                "id":match.id,
+                "date": moment(match.date).format("YYYY/MM/DD"),
+                "startTime": moment(match.startTime).format("HH:mm:ss"),
+                "callTime": moment(match.callTime).format("HH:mm:ss"),
+                "callPlace": match.callPlace,
+                "matchPlace": match.matchPlace,
+                "visitorTeam": match.visitorTeam,
+                "status" : getStatusByGoals(match.goalsLocal,match.goalsVisitor),
+                "localTeam": match.localTeam,
+                "goalsLocal": match.goalsLocal,
+                "goalsVisitor": match.goalsVisitor
             }
-        }).catch((e) => {
-            //Aqui poner el mensaje de error
-            console.log(e);
-        })
+            MatchesService.updateMatch(object,id).then(res => {
+                    props.history.push(`/matches`);
+            }).catch((e) => {
+                //Aqui poner el mensaje de error
+                console.log(e);
+            })
+        }
     }
-    function formatTime(time) {
-        let result = null
-        if (time !== null) {
-            let d = new Date(time.getTime() + 60000 * time.getTimezoneOffset())
-            let hour = d.getHours()
-            let minute = d.getMinutes()
 
-            if (hour.toString().length < 2) {
-                hour = '0' + hour;
-            }
-            if (minute.toString().length < 2) {
-                minute = '0' + minute;
-            }
-            var dateOfMatch = moment(match.date).format("YYYY-MM-DD");
-            result = dateOfMatch+"T" + [hour, minute, '00'].join(':') + ".000+00:00"
-            return result
-        }
-    }
     return (    
         <Container fixed>
             <div style={{ marginTop: '90px', marginBottom: '100px' }}>
@@ -175,7 +235,20 @@ export default function UpdateMatch(){
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>
                         <Grid container justify="center" alignItems="center" >
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} lg={3} align="center">
+                                {disabledDate ? (
+                                <Grid style={{marginTop:'25px'}} item xs={12} sm={6} lg={3} align="center" >
+                                    <KeyboardDatePicker
+                                        id={"date"}
+                                        label={"Fecha del partido"}
+                                        format="yyyy/MM/dd"
+                                        value={match.date}
+                                        error={dateError !== ''}
+                                        helperText={dateError}
+                                        onChange={(e) => handleDateChange(e)}
+                                        disabled/>
+                                </Grid>
+                                ):(
+                                <Grid style={{marginTop:'25px'}} item xs={12} sm={6} lg={3} align="center">
                                     <KeyboardDatePicker
                                         id={"date"}
                                         label={"Fecha del partido"}
@@ -185,17 +258,9 @@ export default function UpdateMatch(){
                                         helperText={dateError}
                                         onChange={(e) => handleDateChange(e)}/>
                                 </Grid>
-                                <Grid item xs={12} sm={6} lg={3} align="center">
-                                    <KeyboardTimePicker
-                                        id={"startTime"}
-                                        label={"Hora de comienzo"}
-                                        ampm={false}
-                                        value={match.startTime}
-                                        error={startTimeError !== ''}
-                                        helperText={startTimeError}
-                                        onChange={(e) =>handleStartTimeChange(e)}/>
-                                </Grid>
-                                <Grid item xs={12} sm={6} lg={3} align="center">
+                                )
+                                }
+                                <Grid style={{marginTop:'25px'}} item xs={12} sm={6} lg={3} align="center">
                                     <KeyboardTimePicker
                                         id={"callTime"}
                                         label={"Hora de convocatoria"}
@@ -205,19 +270,29 @@ export default function UpdateMatch(){
                                         helperText={callTimeError}
                                         onChange={(e) => handleCallTimeChange(e)}/>
                                 </Grid>
+                                <Grid style={{marginTop:'25px'}} item xs={12} sm={6} lg={3} align="center">
+                                    <KeyboardTimePicker
+                                        id={"startTime"}
+                                        label={"Hora de comienzo"}
+                                        ampm={false}
+                                        value={match.startTime}
+                                        error={startTimeError !== ''}
+                                        helperText={startTimeError}
+                                        onChange={(e) =>handleStartTimeChange(e)}/>
+                                </Grid>
                             </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <FormControl style={{marginTop:'15px'}} focused>
-                                    <InputLabel htmlFor="matchPlace">Lugar Convocatoria</InputLabel>
-                                    <Input className='input-title' type="text" id="matchPlace" label="Lugar del Partido" name="matchPlace" onChange={(e) => handleChange(e)} value={match.matchPlace} />
+                                <FormControl style={{marginTop:'25px'}} focused>
+                                    <InputLabel htmlFor="matchPlace">Lugar del Partido</InputLabel>
+                                    <Input className='input-title' type="text" id="matchPlace" label="Lugar del partido" name="matchPlace" onChange={(e) => handleChange(e)} value={match.matchPlace} />
                                 </FormControl>
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <FormControl style={{marginTop:'15px'}} focused>
+                                <FormControl style={{marginTop:'25px'}} focused>
                                     <InputLabel htmlFor="callPlace">Lugar Convocatoria</InputLabel>
                                     <Input className='input-title' type="text" id="callPlace" label="Lugar de convocatoria" name="callPlace" onChange={(e) => handleChange(e)} value={match.callPlace} />
                                 </FormControl>
@@ -225,21 +300,50 @@ export default function UpdateMatch(){
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <FormControl style={{marginTop:'15px'}} focused>
-                                    <InputLabel htmlFor="visitorTeam">Equipo Visitante</InputLabel>
-                                    <Input className='input-title' type="text" id="visitorTeam" label="Equipo Visitante" name="visitorTeam" onChange={(e) => handleChange(e)} value={match.visitorTeam} />
+                                <FormControl style={{marginTop:'25px'}} focused>
+                                    <InputLabel htmlFor="visitorTeam">Equipo Rival</InputLabel>
+                                    <Input className='input-title' type="text" id="visitorTeam" label="Equipo Rival" name="visitorTeam" onChange={(e) => handleChange(e)} value={match.visitorTeam} />
                                 </FormControl>
                             </div>
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <FormControl style={{marginTop:'15px'}} focused>
-                                    <InputLabel htmlFor="localTeam">Equipo Local</InputLabel>
-                                    <Input className='input-title' type="text" id="localTeam" label="Equipo Local" name="localTeam" onChange={(e) => handleChange(e)} value={match.localTeam} disabled />
+                                <FormControl style={{marginTop:'25px'}} focused>
+                                    <InputLabel htmlFor="localTeam">Tu equipo</InputLabel>
+                                    <Input className='input-title' type="text" id="localTeam" label="Tu equipo" name="localTeam" onChange={(e) => handleChange(e)} value={match.localTeam} disabled />
                                 </FormControl>
                             </div>
                         </Grid>
-                       
+                        <Grid container justify="center" alignItems="center" >
+                            <div>
+                                <FormControl style={{margin:'25px 35px 0px 0px'}} focused>
+                                    <InputLabel htmlFor="goalsLocal">Goles tu Equipo</InputLabel>
+                                    <Input className='input-title' type="number" inputProps={{ min: "0", max: "10"}} id="goalsLocal" label="Goles tu Equipo" name="goalsLocal" onChange={(e) => handleChange(e)} value={match.goalsLocal} />
+                                </FormControl>
+                            </div>
+                            <div>
+                                <FormControl style={{margin:'25px 0px 0px 20px'}} focused>
+                                    <InputLabel htmlFor="goalsVisitor">Goles del Rival</InputLabel>
+                                    <Input className='input-title' type="number" inputProps={{ min: "0", max: "10", size:"40"}} id="goalsVisitor" label="Goles del Rival" name="goalsVisitor" onChange={(e) => handleChange(e)} value={match.goalsVisitor} />
+                                </FormControl>
+                            </div>
+                        </Grid>
+                        <Grid container justify="center" alignItems="center" >
+                            <FormControl style={{marginTop:'25px'}} justify="center" alignItems="center" disabled  className={classes.formControl}>
+                                <InputLabel id="demo-simple-select-label">Estado</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={status}
+                                  onChange={handleChangeStatus}
+                                >
+                                  <MenuItem value="PENDIENTE">Pendiente</MenuItem>
+                                  <MenuItem value="GANADO">Ganado</MenuItem>
+                                  <MenuItem value="EMPATADO">Empatado</MenuItem>
+                                  <MenuItem value="PERDIDO">Perdido</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
                         <Button
                             type="submit"
                             variant="contained"
@@ -250,8 +354,18 @@ export default function UpdateMatch(){
                         <div className={stylesComponent.snak}>
                             <Snackbar open={openSubmitIncorrect} autoHideDuration={6000} onClose={handleClose}>
                                 <Alert onClose={handleClose} severity="error">
-                                    Tienes que rellenar el formulario correctamente
+                                    Tienes los siguentes errores en el formulario {errors.map(err => (
+                                        <p>{err}</p>
+                                    ))}
                             </Alert>
+                            </Snackbar>
+                            
+                        </div>
+                        <div className={stylesComponent.snak}>
+                            <Snackbar open={ableToSetGoals} autoHideDuration={6000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="error">
+                                    No se pueden introducir los goles antes de la fecha del partido
+                                </Alert>
                             </Snackbar>
                         </div>
                     </form>

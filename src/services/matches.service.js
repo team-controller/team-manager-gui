@@ -8,8 +8,12 @@ class MatchesService {
         return http.get(`/oneMatch/${matchId}`, {headers: authHeader()})
     }
 
-    getAllMatchesByCoach(teamId){
+    getAllMatchesByCoach(){
         return http.get(`/matches/`, {headers:authHeader()})
+    }
+
+    getThreeNextMatchesByCoach(idTeam) {
+        return http.get(`/matches/threeNext/${idTeam}`, {headers:authHeader()})
     }
 
     createMatch(object) {
@@ -17,11 +21,21 @@ class MatchesService {
     }
 
     updateMatch(object) {
-        return http.put("/match/edit", object, {headers: authHeader()})
+        return http.put("/match/edit/", object, {headers: authHeader()})
     }
 
     deleteMatch(idMatch) {
         return http.delete(`/match/delete/${idMatch}`, {headers: authHeader()})
+    }
+
+    getPlayersToConvocate(idMatch) {
+        return http.get(`/match/convocate/${idMatch}`, {headers: authHeader()})
+    }
+    getPlayersConvocated(idMatch) {
+        return http.get(`/match/players/convocated/${idMatch}`, {headers: authHeader()})
+    }
+    getAllPlayers(){
+        return http.get(`/match/allPlayers/`, {headers: authHeader()})
     }
 
 }

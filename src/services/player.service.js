@@ -32,6 +32,14 @@ class PlayerService {
     deletePlayer(idTeam, usernamePlayer) {
         return http.delete(`/team/${idTeam}/player/${usernamePlayer}/delete`, {headers: authHeader()})
     }
+
+    convocatePlayer(idMatch, usernamePlayer) {
+        return http.get(`/team/match/${idMatch}/player/${usernamePlayer}/convocar`, {headers: authHeader()})
+    }
+
+    desConvocatePlayer(idMatch, usernamePlayer) {
+        return http.get(`/team/match/${idMatch}/player/${usernamePlayer}/desconvocar`,{headers: authHeader()})
+    }
     
 }
 export default new PlayerService();
