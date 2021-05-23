@@ -310,8 +310,8 @@ export default function UpdateMatch(props){
                         </Grid>
                         <Grid container justify="center" alignItems="center" >
                             <div>
-                                <FormControl style={{margin:'25px 35px 0px 0px'}} focused>
-                                    <InputLabel htmlFor="goalsLocal">Goles tu Equipo</InputLabel>
+                                <FormControl style={{margin:'25px 35px 0px 0px',width:'80%'}} focused>
+                                    <InputLabel style={{width:'100%'}} htmlFor="goalsLocal">Goles tu Equipo</InputLabel>
                                     {ableToSetGoals ? (
                                         <Input className='input-title' type="number" inputProps={{ min: "0", max: "10"}} id="goalsLocal" label="Goles tu Equipo" name="goalsLocal" onChange={(e) => handleChange(e)} value={match.goalsLocal} />
                                     ):(
@@ -321,8 +321,8 @@ export default function UpdateMatch(props){
                                 </FormControl>
                             </div>
                             <div>
-                                <FormControl style={{margin:'25px 0px 0px 20px'}} focused>
-                                    <InputLabel htmlFor="goalsVisitor">Goles del Rival</InputLabel>
+                                <FormControl style={{margin:'25px 0px 0px 20px',width:'100%'}} focused>
+                                    <InputLabel style={{width:'100%'}} htmlFor="goalsVisitor">Goles del Rival</InputLabel>
                                     {ableToSetGoals ? (
                                         <Input className='input-title' type="number" inputProps={{ min: "0", max: "10", size:"40"}} id="goalsVisitor" label="Goles del Rival" name="goalsVisitor" onChange={(e) => handleChange(e)} value={match.goalsVisitor} />
                                     ) : (

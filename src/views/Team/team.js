@@ -111,6 +111,9 @@ export default function Team(props) {
                           <Typography align="center" variant="h5" className={useStyles.title}>
                           {team &&  (<span >Estadio: {team.stadiumName}  </span>)}
                           </Typography>
+                          <Typography align="center" variant="h5" className={useStyles.title}>
+                          {team &&  (<span >Puntos: {team.points}  </span>)}
+                          </Typography>
                         </CardContent>
                         <CardActions>
                         {isCoach && (

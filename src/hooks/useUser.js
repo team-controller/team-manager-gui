@@ -21,10 +21,12 @@ export default function useUser() {
                 window.sessionStorage.setItem('user', JSON.stringify(user))
                 setState({ loading: false, error: false })
                 setAuth(user)
-                if(!user.team){
+                if(!user.team && user.role =="ROLE_COACH"){
                     history.push(`/createTeam/`)
-                }else{ 
+                }else if(user.team && user.role =="ROLE_COACH"){ 
                     updateCurrentTeam(user.team)
+                    history.push(`/team`)
+                }else{
                     history.push(`/team`)
                 }
             })
