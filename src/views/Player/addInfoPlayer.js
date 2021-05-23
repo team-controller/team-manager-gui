@@ -103,7 +103,7 @@ export default function CreatePlayer() {
         <Container fixed>
             <div style={{ marginTop: '90px', marginBottom: '100px' }}>
                 <Typography align="center" className='h5' variant="h5" gutterBottom>
-                    Registra tu jugador
+                    Registra nuevos datos de tu jugador
             </Typography>
                 <div style={{ margin:'0px 0px 0px 20px' }}>
                     <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>

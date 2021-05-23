@@ -166,7 +166,7 @@ export default function EditPlayer(props) {
         <Container fixed>
         <div style={{ marginTop: '90px', marginBottom: '100px' }}>
             <Typography align="center" className='h5' variant="h5" gutterBottom>
-                Edita tu equipo
+                Edita al jugador {player.firstName}
         </Typography>
             <div style={{ margin:'0px 0px 0px 20px' }}>
                 <form onSubmit={(e) => handleSubmit(e)} className={classes.root}>

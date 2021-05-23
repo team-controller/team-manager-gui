@@ -182,7 +182,7 @@ export default function UpdateMatch(props){
             status = "GANADO"
         }else if(parseInt(goalsLocal) === parseInt(goalsVisitante)) { 
             status = "EMPATADO"
-        }else{ 
+        }else if(parseInt(goalsLocal) < parseInt(goalsVisitante)){ 
             status = "PERDIDO"
         }
         return status;
