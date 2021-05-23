@@ -27,7 +27,7 @@ function NotFoundPage() {
 
         </div>
         <div style = {{'textAlign':'center', 'margin': 'auto'}}>
-            <Button variant="contained"  color="primary" onClick={routeRedirect}>
+            <Button variant="contained"  color="primary" onClick={ () => history.push("/")}>
                 Ir al inicio
             </Button>
         </div>

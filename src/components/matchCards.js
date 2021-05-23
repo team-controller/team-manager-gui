@@ -16,10 +16,10 @@ const useStyles = makeStyles({
     marginBottom: 12,
   },
   occupied: {
-    backgroundColor: '#00cca0',
+    backgroundColor: '#F7ABAB',
   },
   free: {
-    backgroundColor: '#fff',
+    backgroundColor: '#B3F2D6',
   },
   disabled: {
     backgroundColor: '#dddddd',
@@ -75,9 +75,10 @@ export function MatchCard(props) {
       }
     })
   }
+  const statusColor = status === "GANADO" ? classes.free : status === "PERDIDO" ? classes.occupied : classes.disabled
   return (
     <div>
-      <Card variant="outlined">
+      <Card className={statusColor} variant="outlined">
         <ButtonBase
           className={classes.cardAction}
           onClick={routeRedirect}>

@@ -255,7 +255,7 @@ export default function EditPlayer(props) {
                                   onChange={handleChangPosition}
                                   autoWidth="true"
                                 >
-                                  <MenuItem value="No definido">--</MenuItem>
+                                  <MenuItem value="No definido">Seleccione una opción</MenuItem>
                                   <MenuItem value="Delantero">Delantero</MenuItem>
                                   <MenuItem value="Centrocampista">Centrocampista</MenuItem>
                                   <MenuItem value="Defensa">Defensa</MenuItem>

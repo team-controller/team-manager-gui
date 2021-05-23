@@ -16,6 +16,7 @@ function Home() {
     }, [isLogged, history])
 
     useEffect(() => {
+        if(auth && auth.role === "ROLE_COACH"){
         teamService.haveTeam().then(res => {
             if(res.data !== true){
                 history.push('/createTeam')
@@ -23,6 +24,7 @@ function Home() {
         }).catch(e => { 
             history.push('/pageNotFound')
         })
+        }
      }, [history])
     
     return <Container component="main" maxWidth="xs">

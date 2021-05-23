@@ -52,6 +52,7 @@ export default function Games(props) {
 
     
     useEffect(() => {
+        if(isCoach) {
         teamService.haveTeam().then(res => {
             if(res.data !== true){
                 history.push('/createTeam')
@@ -59,11 +60,12 @@ export default function Games(props) {
         }).catch(e => { 
             history.push('/pageNotFound')
         })
+        }
      }, [])
 
      useEffect(() => {
          if(auth) {
-            MatchesService.getAllMatchesByCoach().then(res => {
+            MatchesService.getAllMatchesByCoach(auth.team.id).then(res => {
                 setMatches(parseData(res.data));
             }).catch((e) => {
                 console.log(e);

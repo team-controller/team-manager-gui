@@ -28,7 +28,6 @@ export default function SimpleBottomNavigation(props) {
   const [value, setValue] = React.useState(0);
   const history = useHistory();
   const {auth, isLogged} = useUser();
-
   return (
     <Drawer variant="persistent" anchor="bottom" open={isLogged}>
       <BottomNavigation

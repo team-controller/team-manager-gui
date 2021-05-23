@@ -42,6 +42,7 @@ export default function MatchDetails(props){
     const [match,setMatch] = useState({});
     const [playersConvocated, setPlayersConvocated] = useState([])
     const [ableToDeConvocate, setAbleToDeconvocate] = useState(true);
+    const isCoach = auth.role === "ROLE_COACH"
     useEffect(() => {
         if (!isLogged) {
             history.push('/signup')
@@ -49,6 +50,7 @@ export default function MatchDetails(props){
     }, [isLogged, history])
 
     useEffect(() => {
+      if(isCoach){
         TeamService.haveTeam().then(res => {
             if(res.data !== true){
                 history.push('/createTeam')
@@ -56,6 +58,7 @@ export default function MatchDetails(props){
         }).catch(e => { 
             history.push('/pageNotFound')
         })
+      }
      }, [history])
 
      useEffect(() => {
@@ -117,14 +120,15 @@ export default function MatchDetails(props){
                       }
                     </CardContent>
                     <CardActions align="center">
-                      {ableToDeConvocate ? (
+                      {ableToDeConvocate && isCoach && (
                         <Button style={{backgroundImage: 'linear-gradient(46deg, #003e85 30%, #008ca0 70%)'}} type="submit"
                             variant="contained"
                             color="primary"
                             onClick={() => history.push(`/convocate/${id}`)}
                             > Realizar Convocatoria
                         </Button>
-                        ) : (
+                        )} 
+                        {!ableToDeConvocate && isCoach && (
                           <Button style={{backgroundImage: 'linear-gradient(46deg, #003e85 30%, #008ca0 70%)'}} type="submit"
                           variant="contained"
                           color="primary"
@@ -165,11 +169,13 @@ export default function MatchDetails(props){
                             <span>Posicion</span>
                           </Typography>
                         </TableCell>
+                        {isCoach && (
                         <TableCell align="center">
                           <Typography className={useStyles.title}>
                             <span>Acciones</span>
                           </Typography>
                         </TableCell>
+                        )}
                       </TableRow>
                       </TableHead>
                       <TableBody>
@@ -181,23 +187,25 @@ export default function MatchDetails(props){
                                   <TableCell align="center"component="th" scope="row">
                                           {row.position}
                                   </TableCell>
+                                {ableToDeConvocate && isCoach && (
                                   <TableCell align="center" component="th" scope="row">
-                                      {ableToDeConvocate ? (
-                                        <Button variant="contained"
-                                          color="primary"
-                                          style={{ ...stylesComponent.buttonCrear }}
-                                          onClick={() => desConvocatePlayer(id,row.username)}> Desconvocar
-                                        </Button>
-                                      ):(
-                                        <Button variant="contained"
-                                          color="primary"
-                                          style={{ ...stylesComponent.buttonCrear }}
-                                          onClick={() => desConvocatePlayer(id,row.username)}
-                                          disabled> Desconvocar
-                                        </Button>
-                                      )}
-                                      
+                                    <Button variant="contained"
+                                      color="primary"
+                                      style={{ ...stylesComponent.buttonCrear }}
+                                      onClick={() => desConvocatePlayer(id,row.username)}> Desconvocar
+                                    </Button>
                                   </TableCell>
+                                )}
+                                {!ableToDeConvocate && isCoach &&(
+                                  <TableCell align="center" component="th" scope="row">
+                                    <Button variant="contained"
+                                      color="primary"
+                                      style={{ ...stylesComponent.buttonCrear }}
+                                      onClick={() => desConvocatePlayer(id,row.username)}
+                                      disabled> Desconvocar
+                                    </Button>
+                                  </TableCell>
+                                  )}
                               </TableRow>
                           ))}
                       </TableBody>

@@ -34,7 +34,7 @@ export default function CreatePlayer() {
     const [dateError, setDateError] = useState('')
 
     useEffect(() => {
-        setPosition("No Definido") //Se setea aqui 
+        setPosition("No definido") //Se setea aqui 
         if (!admin) history.push('/')
     }, [admin, history])
 
@@ -195,7 +195,7 @@ export default function CreatePlayer() {
                                   onChange={handleChangPosition}
                                   autoWidth="true"
                                 >
-                                  <MenuItem value="No definido">--</MenuItem>
+                                  <MenuItem value="No definido">Seleccione una opción</MenuItem>
                                   <MenuItem value="Delantero">Delantero</MenuItem>
                                   <MenuItem value="Centrocampista">Centrocampista</MenuItem>
                                   <MenuItem value="Defensa">Defensa</MenuItem>

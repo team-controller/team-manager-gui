@@ -8,8 +8,8 @@ class MatchesService {
         return http.get(`/oneMatch/${matchId}`, {headers: authHeader()})
     }
 
-    getAllMatchesByCoach(){
-        return http.get(`/matches/`, {headers:authHeader()})
+    getAllMatchesByCoach(idTeam){
+        return http.get(`/matches/${idTeam}`, {headers:authHeader()})
     }
 
     getThreeNextMatchesByCoach(idTeam) {
