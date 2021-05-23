@@ -36,7 +36,6 @@ export default function EditPlayer(props) {
     const rol = "ROLE_PLAYER";
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const [errors, setErrors] = useState({})
-    const [dateError, setDateError] = useState('')
     const [newPassword, setNewPassword] = useState('')
 
     useEffect(() => {
@@ -54,7 +53,7 @@ export default function EditPlayer(props) {
                 }
             )
         }
-    }, [admin, history])
+    }, [admin, history, idTeam,usernamePlayer])
 
     const handleSubmit = (evt) => {
         evt.preventDefault()
@@ -91,7 +90,6 @@ export default function EditPlayer(props) {
         let objErrors = {};
         let valid = true;
 
-        const patternDate = new RegExp('^(\\d{4})[\\/](0?[1-9]|1[012])[\\/](0?[1-9]|[12][0-9]|3[01])$');
         const patternMobile = new RegExp('^([67][0-9]{8})');
 
         if(!player.username) {
@@ -239,7 +237,7 @@ export default function EditPlayer(props) {
                                         label={"Fecha de Nacimiento"}
                                         format="yyyy/MM/dd"
                                         value={player.fechaNacimiento}
-                                        error={dateError !== ''}
+                                        error={errors !== ''}
                                         helperText={errors.fechaNacimiento}
                                         onChange={handleDateChange}
                                         focused/>

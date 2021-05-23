@@ -47,7 +47,7 @@ export default function Login() {
 
     useEffect(() => {
         if (isLogged) {
-            history.push('/')
+            history.push('/team')
         }
     }, [isLogged, history])
 

@@ -35,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ConvocatePlayers(props) {
     const history = useHistory();
     const [players, setPlayers] = useState([])
-    const [playersConvocates, setPlayersConvocated] = useState([])
-    const [playersAvaliable, setPlayersAvaliable] = useState([])
     const idMatch = props.match.params.id
     const {isLogged} = useUser();
 
@@ -63,7 +61,7 @@ export default function ConvocatePlayers(props) {
                 history.goBack();
             }
         })
-    }, [history]) 
+    }, [history,idMatch]) 
     useEffect(() => {
         MatchesService.getPlayersToConvocate(idMatch).then(res => {
            
@@ -73,7 +71,7 @@ export default function ConvocatePlayers(props) {
         }).catch(err => {
             console.log(err)
         })
-    }, [history])
+    }, [history,idMatch])
 
     const convocatePlayer = (idMatch,usernamePlayer) => {
         PlayerService.convocatePlayer(idMatch, usernamePlayer).then((response) => {

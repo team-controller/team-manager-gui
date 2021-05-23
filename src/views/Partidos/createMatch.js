@@ -32,7 +32,6 @@ export default function CreateMatch() {
     const [dateError, setDateError] = useState('')
     const [errors, setErrors] = useState([]);
     
-    const player = "ROLE_PLAYER";
     useEffect(() => {
         if (!admin) history.push('/')
     }, [admin, history])

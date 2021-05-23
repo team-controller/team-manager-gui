@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardActions, CardContent, Container, CssBaseline, Grid, makeStyles, Typography,TableBody, TableHead, TableRow, TableCell, Table } from "@material-ui/core";
+import { Button, Card, CardActions, CardContent, CssBaseline, Grid, makeStyles, Typography,TableBody, TableHead, TableRow, TableCell, Table } from "@material-ui/core";
 import { useHistory, useParams } from "react-router";
 import useUser from "../../hooks/useUser";
 import TeamService from "../../services/team.service";
 import MatchService from "../../services/matches.service";
 import PlayerService from "../../services/player.service";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -59,7 +58,7 @@ export default function MatchDetails(props){
             history.push('/pageNotFound')
         })
       }
-     }, [history])
+     }, [history,isCoach])
 
      useEffect(() => {
          MatchService.getOneMatch(id).then(res => {
@@ -68,13 +67,13 @@ export default function MatchDetails(props){
               setAbleToDeconvocate(false);
             }
          })
-     }, [history])
+     }, [history,id])
 
      useEffect(() => {
        MatchService.getPlayersConvocated(id).then(res => {
          setPlayersConvocated(res.data);
        })
-     },[history])
+     },[history,id])
      const desConvocatePlayer = (idMatch, usernamePlayer) => { 
       PlayerService.desConvocatePlayer(idMatch, usernamePlayer).then((response) => {
           if(response.status === 200){

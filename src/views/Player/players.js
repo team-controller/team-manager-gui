@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import {useHistory} from 'react-router'
-import {makeStyles, useTheme} from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import PlayerService from "../../services/player.service"
 import {Card, CardContent, Table, Typography, TableHead, TableRow, TableCell, TableBody} from'@material-ui/core'
@@ -90,7 +90,7 @@ export default function Players(props) {
         }).catch(e => { 
             history.push('/pageNotFound')
         })
-     }, [])
+     }, [history])
 
     useEffect(() => {
         PlayerService.getAllPlayers(idTeam).then(res => { 
@@ -98,7 +98,7 @@ export default function Players(props) {
         }).catch(err => {
             console.log(err)
         })
-    }, [history])
+    }, [history,idTeam])
 
 
     const deletePlayer = (idTeam, usernamePlayer) => {

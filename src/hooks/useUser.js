@@ -9,6 +9,10 @@ export default function useUser() {
     const [isUpdate, setUpdate] = useState(false)
     
     const history = useHistory()
+ 
+    const updateCurrentTeam = useCallback((team) => {
+        setCurrentTeam(team)
+    }, [setCurrentTeam])
 
     const login = useCallback(({ username, password }) => {
         setState({ loading: true, error: false })
@@ -21,7 +25,7 @@ export default function useUser() {
                     history.push(`/createTeam/`)
                 }else{ 
                     updateCurrentTeam(user.team)
-                    history.push(`/`)
+                    history.push(`/team`)
                 }
             })
             .catch(err => {
@@ -34,7 +38,7 @@ export default function useUser() {
                     history.push("/pageNotFound")
                 }
             })
-    }, [setAuth, history])
+    }, [setAuth, history, updateCurrentTeam])
 
     const signup = useCallback(({ username, fechaNacimiento, role, password, firstName, secondName, phoneNumber}) => {
         setState({ loading: true, error: false })
@@ -83,10 +87,7 @@ export default function useUser() {
         window.sessionStorage.removeItem('user')
         setAuth(null)
     }, [setAuth, history])
- 
-    const updateCurrentTeam = useCallback((team) => {
-        setCurrentTeam(team)
-    }, [setCurrentTeam])
+
 
     return {
         isLogged: Boolean(auth),

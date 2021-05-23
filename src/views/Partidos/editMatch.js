@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MatchesService from "../../services/matches.service";
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
-import { Button, Snackbar, Container, Grid, Typography,InputLabel,Select, MenuItem, TextField, FormControl, Input } from '@material-ui/core';
+import { Button, Snackbar, Container, Grid, Typography,InputLabel,Select, MenuItem, FormControl, Input } from '@material-ui/core';
 import { useHistory } from 'react-router'
 import useUser from '../../hooks/useUser';
 import { useParams } from 'react-router-dom';
@@ -42,14 +42,12 @@ export default function UpdateMatch(props){
     const classes = useStyles();
     const history = useHistory()
     const [match, setMatch] = useState({});
-    const {isLogged,auth} = useUser();
+    const {auth} = useUser();
     const {id} = useParams();
-    const [startTimeError, setStartTimeError] = useState('')
-    const [endTimeError, setEndTimeError] = useState('')
-    const [callTimeError, setCallTimeError] = useState('')
-    const [dateError, setDateError] = useState('')
+    const [startTimeError] = useState('')
+    const [callTimeError] = useState('')
+    const [dateError] = useState('')
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
-    const [openHoursIncorrect, setOpenHoursIncorrect] = useState(false)
     const [ableToSetGoals, setAbleToSetGoals] = useState(false);
     const [disabledDate, setDisabledDate] = useState(false);
     const [status, setStatus] = useState("");
@@ -78,7 +76,6 @@ export default function UpdateMatch(props){
             return;
         }
         setOpenSubmitIncorrect(false)
-        setOpenHoursIncorrect(false);
         setAbleToSetGoals(false);
         setErrors([])
     };

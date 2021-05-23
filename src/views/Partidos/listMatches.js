@@ -9,23 +9,6 @@ import { MatchCard } from "../../components/matchCards"
 import teamService from "../../services/team.service"
 import moment from "moment"
 
-const stylesComponent = {
-    buttonCrear: {
-        backgroundColor: '#006e85',
-        textTransform: 'none',
-        letterSpacing: 'normal',
-        fontSize: '15px',
-        fontWeight: '600',
-        textAlign: 'center',
-        margin: 'auto',
-        display: 'block',
-        marginTop: '30px'
-    },
-    snak: {
-        marginBottom: '20px',
-    }
-}
-
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '5rem',
@@ -48,7 +31,7 @@ export default function Games(props) {
         if(!auth){
             history.push('/')
         }
-     }, [isLogged, history])
+     }, [auth,isLogged, history])
 
     
     useEffect(() => {
@@ -61,7 +44,7 @@ export default function Games(props) {
             history.push('/pageNotFound')
         })
         }
-     }, [])
+     }, [isCoach, history])
 
      useEffect(() => {
          if(auth) {
@@ -74,7 +57,7 @@ export default function Games(props) {
      }, [auth])
      function parseData(data) {
         var newData = []; 
-        data.map((match) => {
+        data.forEach((match) => {
              match.date = moment(match.date).format("DD/MM/yyyy");
              newData.push(match);
          })

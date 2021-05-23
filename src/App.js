@@ -1,10 +1,10 @@
-import React, { Component } from "react"
-import { Switch, Route, Link } from "react-router-dom"
+import React from "react"
+import { Switch, Route} from "react-router-dom"
 import "./App.css"
 
 import Home from "./views/home"
 import BottomBar from './components/bottom-bar'
-import { makeStyles, createMuiTheme} from "@material-ui/core/styles"
+import { makeStyles} from "@material-ui/core/styles"
 import Login from "./views/Login"
 import Signup from "./views/Signup/signup"
 import Header from "./components/navBar"
@@ -79,17 +79,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
   },
 }))
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#006e85',
-    },
-    secondary: {
-      main: '#00cca0',
-    },
-  },
-});
 
 export default function App() {  
   const classes = useStyles()  

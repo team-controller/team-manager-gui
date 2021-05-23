@@ -46,8 +46,6 @@ export function MatchCard(props) {
   const {id,date, status,visitorTeam} = props
   const history = useHistory()
   const [openRemoveCorrect, setOpenRemoveCorrect] = useState(false)
-  const [openRemoveInCorrect24h, setOpenRemoveInCorrect24h] = useState(false)
-  const [openDetailsIncorrect, setOpenDetailsIncorrect] = useState(false)
   const theme = useTheme();
   const phoneScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
@@ -61,9 +59,6 @@ export function MatchCard(props) {
       return;
     }
     setOpenRemoveCorrect(false)
-    setOpenRemoveInCorrect24h(false)
-    setOpenDetailsIncorrect(false)
-
   };
   const removeMatch = () => {
     MatchesService.deleteMatch(id).then(res => {
@@ -71,7 +66,6 @@ export function MatchCard(props) {
         history.go(0);
         setOpenRemoveCorrect(true)
       }else{
-        setOpenRemoveInCorrect24h(true)
       }
     })
   }
@@ -111,11 +105,6 @@ export function MatchCard(props) {
         <Alert onClose={handleClose} severity="error">
           Has borrado correctamente el Partido
          </Alert>
-      </Snackbar>
-      <Snackbar open={openRemoveInCorrect24h} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          No puedes borrar una partido a menos de 24Horas
-        </Alert>
       </Snackbar>
     </div>
   );

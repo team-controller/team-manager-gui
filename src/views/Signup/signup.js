@@ -50,7 +50,6 @@ export default function SignUp() {
     const classes = useStyles();
     const history = useHistory();
     const [formData, setFormData] = useState({})
-    const [checkData, setCheckData] = useState({})
     const [formErrors, setFormErrors] = useState({})
     const [passwordShown, setPasswordShown] = useState(false);
     const role = 'ROLE_COACH'

@@ -15,10 +15,7 @@ function NotFoundPage() {
         }
     }
     const history = useHistory();
-    const routeRedirect = () => {
-        let path = '/';
-        history.push(path);
-    }
+
     return <Container component="main" maxWidth="xs">
         <CssBaseline />
         <br></br>

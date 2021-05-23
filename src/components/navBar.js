@@ -7,7 +7,6 @@ import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import useUser from '../hooks/useUser'
 import { AccountCircle } from '@material-ui/icons'
 import { Menu, MenuItem } from '@material-ui/core'
-import { useHistory } from 'react-router'
 import { makeStyles } from '@material-ui/core/styles';
 import Logo from "../img/LogoTeamManager.png";
 import Avatar from '@material-ui/core/Avatar'
@@ -29,14 +28,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Header(props) {
-  const { isLogged, logout, auth } = useUser()
+  const { isLogged, logout } = useUser()
   const { classes } = props
   const classes2 = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
-
-  const history = useHistory()
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget)
@@ -87,9 +84,6 @@ export default function Header(props) {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={() => history.push('/profile')}>
-                Perfil
-              </MenuItem>
               <MenuItem onClick={logout}>Cerrar sesión</MenuItem>
             </Menu>
           </div>
