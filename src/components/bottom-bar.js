@@ -33,13 +33,13 @@ export default function SimpleBottomNavigation(props) {
         showLabels
         className={classes2.root}
       >
-        <BottomNavigationAction
+        {/* <BottomNavigationAction
           xs={3}
           label="Inicio"
           icon={<Home />}
           component={Link}
           to="/"
-        />
+        /> */}
         <BottomNavigationAction
           xs={3}
           label="Tu equipo"

@@ -37,6 +37,7 @@ export default function EditPlayer(props) {
     const [openSubmitIncorrect, setOpenSubmitIncorrect] = useState(false)
     const [errors, setErrors] = useState({})
     const [newPassword, setNewPassword] = useState('')
+    const [dateError, setDateError] = useState('')
 
     useEffect(() => {
         if (!admin) {
@@ -237,7 +238,7 @@ export default function EditPlayer(props) {
                                         label={"Fecha de Nacimiento"}
                                         format="yyyy/MM/dd"
                                         value={player.fechaNacimiento}
-                                        error={errors !== ''}
+                                        error={dateError !== ''}
                                         helperText={errors.fechaNacimiento}
                                         onChange={handleDateChange}
                                         focused/>
@@ -251,7 +252,6 @@ export default function EditPlayer(props) {
                                   id="demo-simple-select"
                                   value={position}
                                   onChange={handleChangPosition}
-                                  autoWidth="true"
                                 >
                                   <MenuItem value="No definido">Seleccione una opción</MenuItem>
                                   <MenuItem value="Delantero">Delantero</MenuItem>
